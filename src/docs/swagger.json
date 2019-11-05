@@ -1,0 +1,119 @@
+{
+    "swagger" : "2.0",
+    "info" : {
+      "description" : "Making company travel and accomodation easy and convenient.",
+      "version" : "1.0.0",
+      "title" : "Barefoot Nomad"
+    },
+    "host" : "boondocks-bn-backend.herokuapp.com",
+    "basePath" : "/api/v1",
+    "tags" : [ {
+      "name" : "Users",
+      "description" : "Users related endpoints"
+    } ],
+    "schemes" : [ "https", "http" ],
+    "security" : [ {
+      "UserSecurity" : [ ]
+    } ],
+    "paths" : {
+      "/users" : {
+        "post" : {
+          "tags" : [ "Users" ],
+          "summary" : "Register a new user",
+          "description" : "Register a new user",
+          "operationId" : "signup",
+          "consumes" : [ "application/json" ],
+          "produces" : [ "application/json" ],
+          "parameters" : [ {
+            "in" : "body",
+            "name" : "user",
+            "description" : "user to register",
+            "required" : false,
+            "schema" : {
+              "$ref" : "#/definitions/user"
+            }
+          } ],
+          "responses" : {
+            "200" : {
+              "description" : "User created successfully"
+            },
+            "400" : {
+              "description" : "invalid input, enter valid information"
+            },
+            "401" : {
+              "description" : "Unauthorized access, unauthorized token"
+            },
+            "403" : {
+              "description" : "Forbidden, Invalid access token"
+            },
+            "500" : {
+              "description" : "Internal Server Error"
+            }
+          }
+        }
+      },
+      "/users/login" : {
+        "post" : {
+          "tags" : [ "Users" ],
+          "summary" : "Log in an existing user",
+          "description" : "log in an existing user into the system",
+          "operationId" : "signin",
+          "consumes" : [ "application/json" ],
+          "produces" : [ "application/json" ],
+          "parameters" : [ {
+            "in" : "body",
+            "name" : "userCredentials",
+            "description" : "User login credentials",
+            "required" : false,
+            "schema" : {
+              "$ref" : "#/definitions/login"
+            }
+          } ],
+          "responses" : {
+            "200" : {
+              "description" : "User logged on successfully"
+            },
+            "400" : {
+              "description" : "invalid input, password or email may be incorect"
+            }
+          }
+        }
+      }
+    },
+    "securityDefinitions" : {
+      "UserSecurity" : {
+        "type" : "apiKey",
+        "name" : "X-Access-Token",
+        "in" : "header"
+      }
+    },
+    "definitions" : {
+      "user" : {
+        "type" : "object",
+        "required" : [ "email", "username" ],
+        "properties" : {
+          "email" : {
+            "type" : "string"
+          },
+          "username" : {
+            "type" : "string"
+          },
+          "bio" : {
+            "type" : "string"
+          }
+        }
+      },
+      "login" : {
+        "type" : "object",
+        "required" : [ "email", "password" ],
+        "properties" : {
+          "email" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  }
