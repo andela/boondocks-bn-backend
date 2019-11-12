@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/andela/boondocks-bn-backend.svg?branch=develop)](https://travis-ci.org/andela/boondocks-bn-backend)
-[![Coverage Status](https://coveralls.io/repos/github/andela/boondocks-bn-backend/badge.svg?branch=develop)](https://coveralls.io/github/andela/boondocks-bn-backend?branch=develop)
+[![Coverage Status](https://coveralls.io/repos/github/andela/boondocks-bn-backend/badge.svg)](https://coveralls.io/github/andela/boondocks-bn-backend)
 [![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
 # Barefoot Nomad - Making company travel and accomodation easy and convinient.

@@ -22,7 +22,7 @@ const options = {
         bearerAuth: {
           type: 'http',
           scheme: 'bearer',
-          bearerFormat: 'JWT',
+          bearerFormat: 'JWT'
         }
       }
     },
@@ -47,7 +47,7 @@ const options = {
   apis: [
     path.resolve(__dirname, '../docs/resources/*.yaml'),
     path.resolve(__dirname, '../routes/api/*.js')
-  ],
+  ]
 };
 
 module.exports = options;

@@ -1,24 +1,25 @@
 // eslint-disable-next-line import/no-unresolved
 import { createLogger, format, transports } from 'winston';
 
-
 const {
   combine, timestamp, simple, json
 } = format;
 const logger = createLogger({
   format: combine(
     timestamp(),
-    json(),
+    json()
   ),
   transports: [
     new transports.Console({
-      format: simple(),
+      format: simple()
     }),
     new transports.File({ filename: '.logs/error.log', level: 'error' }),
-    new transports.File({ filename: '.logs/info.log', level: 'info' }),
+    new transports.File({
+      filename: '.logs/info.log',
+      level: 'info'
+    })
   ],
-  exitOnError: false,
+  exitOnError: false
 });
-
 
 export default logger;

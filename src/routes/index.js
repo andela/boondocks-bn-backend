@@ -20,7 +20,9 @@ router.use((err, req, res, next) => {
 });
 
 router.use('/api/docs', serve);
-router.use('/api/docs', setup(specs, { explorer: false, customeSiteTitle: 'Barefoot Nomad API' }));
-
+router.use('/api/docs', setup(specs, {
+  explorer: false,
+  customeSiteTitle: 'Barefoot Nomad API'
+}));
 
 export default router;

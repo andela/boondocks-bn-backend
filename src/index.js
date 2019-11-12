@@ -1,12 +1,14 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 import express from 'express';
-import { urlencoded, json } from 'body-parser';
+import { json, urlencoded } from 'body-parser';
 import cors from 'cors';
-import errorhandler from 'errorhandler';
 import router from './routes/index';
+import logger from './utils/winston';
+import Responses from './utils/response';
+import ErrorHandler from './utils/error';
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isDevelopment = process.env.NODE_ENV;
 
 const app = express();
 
@@ -15,49 +17,36 @@ app.use(cors());
 app.use(urlencoded({ extended: false }));
 app.use(json());
 
-
-if (!isProduction) {
-  app.use(errorhandler());
-}
-
 // used in testing heroku
-app.get('/', (req, res) => res.status(200).json({
-  status: 200,
-  message: 'Welcome to Barefoot Nomad'
-}));
+app.get('/', (req, res) => Responses.handleSuccess(200, 'Welcome to Barefoot Nomad', res));
 
-app.use(router);
-app.use((req, res, next) => {
-  const err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+// to throw an error to the logger
+app.get('/err', (req, res) => {
+  throw new ErrorHandler('Error here');
 });
 
+app.use(router);
+app.use((req, res, next) => Responses.handleError(404, 'Not found', res));
 
-if (!isProduction) {
-  app.use((err, req, res, next) => {
-    console.log(err.stack);
-
-    res.status(err.status || 500);
-
-    res.json({
-      errors: {
-        message: err.message,
-        error: err
-      }
-    });
-  });
-}
-
-
+// development error handler middleware
 app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.json({
-    errors: {
-      message: err.message,
-      error: {}
-    }
-  });
+  if (isDevelopment !== 'development') {
+    return next(err);
+  }
+  logger.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${
+    req.ip
+  } - Stack: ${err.stack}`);
+
+  return Responses.handleError(err.statusCode, `${err.message} - check logs for more info`, res);
+});
+
+// Production and testing error handler middleware
+app.use((err, req, res, next) => {
+  logger.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${
+    req.ip
+  } - Stack: ${err.stack}`);
+
+  return Responses.handleError(err.statusCode, err.message, res);
 });
 
 // finally, let's start our server...
