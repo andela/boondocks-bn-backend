@@ -75,6 +75,11 @@ module.exports = (sequelize, DataTypes) => {
     phoneNumber: {
       allowNull: true,
       type: DataTypes.STRING
+    },
+    receiveNotification: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+      allowNull: false
     }
   }, {});
   User.associate = (models) => {
@@ -100,6 +105,10 @@ module.exports = (sequelize, DataTypes) => {
     });
     User.hasMany(models.comment, {
       foreignKey: 'userId',
+    });
+    User.hasMany(models.notification, {
+      foreignkey: 'userId',
+      targetKey: 'id',
       onDelete: 'CASCADE'
     });
   };

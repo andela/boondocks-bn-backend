@@ -2,10 +2,12 @@ import express from 'express';
 import fs from 'fs';
 import { urlencoded, json } from 'body-parser';
 import cors from 'cors';
+import socketIo from 'socket.io';
 import passport from 'passport';
 import morganLogger from 'morgan';
 import router from './routes/index';
 import logger from './utils/winston';
+import jwt from './utils/jwt';
 import Responses from './utils/response';
 import config from './config';
 import ErrorHandler from './utils/error';
@@ -47,6 +49,29 @@ app.use(cors({
 app.use(urlencoded({ extended: false }));
 app.use(json());
 
+app.set('port', config.PORT || 3000);
+const server = app.listen(app.get('port'), () => {
+  logger.info(`Express running → PORT ${server.address().port}`);
+});
+
+const connectedClients = {};
+const io = socketIo(server);
+io.use(async (socket, next) => {
+  const { token } = socket.handshake.query;
+  const userData = await jwt.decodeToken(token);
+  if (!userData.error) {
+    const clientKey = Number.parseInt(userData.userId, 10);
+    connectedClients[clientKey] = connectedClients[clientKey] || [];
+    connectedClients[clientKey].push(socket.id);
+  }
+  next();
+});
+app.use((req, res, next) => {
+  req.io = io;
+  req.connectedClients = connectedClients;
+  next();
+});
+
 // used in testing heroku
 app.get('/', (req, res) => Responses.handleSuccess(200, 'Welcome to Barefoot Nomad', res));
 
@@ -82,6 +107,14 @@ process.on('unhandledRejection', (reason) => {
 process.on('uncaughtException', (error) => {
   logger.error(`Uncaught Exception: ${500} - ${error.message}, Stack: ${error.stack}`);
   process.kill(process.pid, 'SIGTERM');
+});
+// Gracefull shut downs.
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM signal received.');
+  logger.info('Closing http server.');
+  server.close(() => {
+    logger.info('Http server closed.');
+  });
 });
 
 export default app;

@@ -30,6 +30,13 @@ const request = {
       password: Hash.generateSync('fghtttfht55'),
       role: 'manager'
     },
+    {
+      firstName: 'Test',
+      lastName: 'case',
+      email: 'testcase32@email.co',
+      password: Hash.generateSync('fghtttfht55'),
+      role: 'manager'
+    }
   ]
 };
 

@@ -98,4 +98,27 @@ export default class Mailer {
       htmlPath: 'emailVerification.pug'
     });
   }
+
+  /**
+   * Sends th notification email after creation of trip request
+   * @param {string} name - the name of the person.
+   * @param {string} to - the email sending to
+   * @param {string} token - token to verify the email
+   * @return {null} nothing.
+   */
+  async newTravelNotification() {
+    const {
+      to, host, name, token
+    } = this.data;
+    await this.sendEmail({
+      toAddress: to,
+      subject: 'BareFoot Nomad Trip Request',
+      data: {
+        name,
+        link: `${host}/api/v1/notification/stopNotification?token=${token}`
+
+      },
+      htmlPath: 'newTravelNotification.pug'
+    });
+  }
 }

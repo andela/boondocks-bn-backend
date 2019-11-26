@@ -42,8 +42,19 @@ const verifyUser = async (req, res, next) => {
   if (Object.keys(decoded)[0] === 'error') {
     return Responses.handleError(401, 'Invalid token, please login', res);
   }
-  const user = decoded;
-  res.locals.user = user;
+  const user = await db.user.findOne({
+    where: { email: decoded.email }
+  });
+
+  res.locals.user = {
+    email: user.email,
+    name: user.firstName,
+    userId: user.id,
+    verified: user.isVerified,
+    role: user.role,
+    receiveNotification: user.receiveNotification,
+    lineManager: user.lineManagerId
+  };
   next();
 };
 

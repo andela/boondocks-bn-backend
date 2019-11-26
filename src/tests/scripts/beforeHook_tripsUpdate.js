@@ -4,8 +4,10 @@ import app from '../../app';
 import db from '../../models';
 import Bcrypt from '../../utils/hash';
 import updateTripsData from '../mock-data/update-trips-data';
+import requestData from '../mock-data/request';
 
 const prepareForTest = async () => {
+  let manager = '';
   await db.trip.destroy({ where: {}, force: true });
   await db.room.destroy({ where: {}, force: true });
   await db.hotel.destroy({ where: {}, force: true });
@@ -13,12 +15,14 @@ const prepareForTest = async () => {
   await db.room.create(updateTripsData.rooms[0]);
   await db.room.create(updateTripsData.rooms[1]);
   await db.hotel.create(updateTripsData.hotels[0]);
+  manager = await db.user.create(requestData.users[0]);
   await db.user.create({
     firstName: 'Trip',
     lastName: 'Owner',
     password: Bcrypt.generateSync('1234567e'),
     email: 'trip@owner.com',
-    role: 'requester'
+    role: 'requester',
+    lineManagerId: manager.id
   });
   let res = await request(app)
     .post('/api/v1/auth/signin')
@@ -32,7 +36,8 @@ const prepareForTest = async () => {
     lastName: 'Requester',
     password: Bcrypt.generateSync('1234567e'),
     email: 'random@requester.com',
-    role: 'requester'
+    role: 'requester',
+    lineManagerId: manager.id
   });
   res = await request(app)
     .post('/api/v1/auth/signin')

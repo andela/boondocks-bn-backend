@@ -2,6 +2,10 @@ import Responses from '../utils/response';
 import { createRequest, getRequestById } from '../services/request.service';
 import tripService from '../services/Trip.service';
 import db from '../models';
+import Mailer from '../services/Mailer.services';
+import JWTHelper from '../utils/jwt';
+import NotificationService from '../services/notification.service';
+import NotificationUtil from '../utils/notification.util';
 
 /**
  * Class for Trips
@@ -14,6 +18,7 @@ class Trip {
    * @returns {Object} response
    */
   async createTrip(req, res) {
+    const host = `${req.protocol}://${req.get('host')}`;
     const currentUser = res.locals.user;
     const {
       hotelId,
@@ -43,7 +48,24 @@ class Trip {
     });
 
     const request = await getRequestById(requestId);
+    const token = await JWTHelper.signToken(currentUser);
+    if (currentUser.receiveNotification === true) {
+      const mail = new Mailer({
+        name: currentUser.name,
+        to: currentUser.email,
+        host,
+        token
+      });
+      await mail.newTravelNotification();
+    }
 
+    const { lineManager } = currentUser;
+    const notification = await NotificationService.createNotification({
+      modelName: 'Request',
+      type: 'new_request',
+      userId: lineManager,
+    });
+    NotificationUtil.echoNotification(req, notification, 'new_request', lineManager);
     return Responses.handleSuccess(201, 'created', res, request);
   }
 
@@ -54,6 +76,7 @@ class Trip {
    * @returns {Object} response
    */
   async createMultiCitiesTrip(req, res) {
+    const host = `${req.protocol}://${req.get('host')}`;
     const trips = req.body;
     const currentUser = res.locals.user;
 
@@ -84,6 +107,16 @@ class Trip {
     });
 
     const request = await getRequestById(requestId);
+    const token = await JWTHelper.signToken(currentUser);
+    if (currentUser.receiveNotification === true) {
+      const mail = new Mailer({
+        name: currentUser.name,
+        to: currentUser.email,
+        host,
+        token
+      });
+      await mail.newTravelNotification();
+    }
 
     return Responses.handleSuccess(201, 'created', res, request);
   }

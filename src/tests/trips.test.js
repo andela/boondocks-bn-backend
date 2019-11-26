@@ -5,7 +5,8 @@ import db from '../models';
 import tripsData from './mock-data/trips-data';
 import Hash from '../utils/hash';
 import tokenizer from '../utils/jwt';
-import { roomfactory, requestfactory } from './scripts/factories';
+import { roomfactory, requestfactory, userfactory } from './scripts/factories';
+import requestData from './mock-data/request';
 
 should();
 use(chaiHttp);
@@ -14,6 +15,7 @@ const prefix = '/api/v1';
 
 describe('/trips/{ oneway | return }', () => {
   let token = '';
+  let manager = '';
   before(async () => {
     await db.trip.destroy({ where: {}, force: true });
     await db.room.destroy({ where: {}, force: true });
@@ -27,11 +29,13 @@ describe('/trips/{ oneway | return }', () => {
 
     await db.trip.create(tripsData.trips[3]);
     await db.hotel.create(tripsData.hotels[0]);
+    manager = await userfactory(requestData.users[0]);
     await db.user.create({
       firstName: 'John',
       lastName: 'McCain',
       password: Hash.generateSync('1234567e'),
-      email: 'john@mccain.com'
+      email: 'john@mccain.com',
+      lineManagerId: manager.id
     });
     token = await tokenizer.signToken({
       id: 1,

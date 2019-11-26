@@ -86,13 +86,38 @@ describe('PATCH /Request/:ID appproved', () => {
       });
   });
   describe('Manager should not be able to access Requests that do not belong to him', () => {
+    let manager1 = '';
     before(async () => {
-      manager = await userfactory(requestData.users[3]);
+      await truncate();
+      await roomfactory(tripsData.rooms[0]);
+      await hotelfactory(tripsData.hotels[0]);
+      manager = await userfactory(requestData.users[0]);
+      manager1 = await userfactory(requestData.users[3]);
+      const user = await userfactory({
+        firstName: 'new',
+        lastName: 'test',
+        email: 'testnew@email.co',
+        password: Hash.generateSync('bttj6bt'),
+        lineManagerId: manager.id
+      });
       token = await tokenizer.signToken({
-        id: manager.id,
+        id: manager1.id,
         email: 'testcase@email.co',
         role: 'manager'
       });
+      userToken = await tokenizer.signToken(user);
+    });
+
+    before((done) => {
+      request(app)
+        .post(`${PREFIX}/trips/oneway`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send(tripsData.trips[0])
+        .end((err, res) => {
+          requestId = res.body.data.id;
+          res.status.should.be.eql(201);
+          done(err);
+        });
     });
     it('Patch /request/:id - user should not be able to update request status that doesn\'t belong to him', (done) => {
       request(app)

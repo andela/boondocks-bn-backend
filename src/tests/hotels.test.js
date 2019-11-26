@@ -7,6 +7,7 @@ import db from '../models';
 import Hash from '../utils/hash';
 import tokenizer from '../utils/jwt';
 import { hotelfactory, locationfactory } from './scripts/factories';
+import truncate from './scripts/truncate';
 
 should();
 use(chaiHttp);
@@ -19,16 +20,30 @@ describe('/hotels', () => {
   let notOwnerToken = '';
 
   before(async () => {
-    await db.hotel.destroy({ where: {}, force: true });
-    await db.user.destroy({ where: {}, force: true });
-    await db.location.destroy({ where: {}, force: true });
+    await truncate();
 
     await db.user.create({
       id: 1,
       firstName: 'John',
       lastName: 'McCain',
       password: Hash.generateSync('1234567e'),
+      email: 'john@mccain6.com',
+      role: 'travel_administrator'
+    });
+    await db.user.create({
+      id: 2,
+      firstName: 'John',
+      lastName: 'McCain',
+      password: Hash.generateSync('1234567e'),
       email: 'john@mccain.com',
+      role: 'requester'
+    });
+    await db.user.create({
+      id: 3,
+      firstName: 'John',
+      lastName: 'McCain',
+      password: Hash.generateSync('1234567e'),
+      email: 'john@mccain00.com',
       role: 'travel_administrator'
     });
 
@@ -51,14 +66,7 @@ describe('/hotels', () => {
 
     token = await tokenizer.signToken({
       id: 1,
-      email: 'john@mccain.com',
-      isVerified: 1,
-      role: 'travel_administrator'
-    });
-
-    notOwnerToken = await tokenizer.signToken({
-      id: 2,
-      email: 'john@mccain.com',
+      email: 'john@mccain6.com',
       isVerified: 1,
       role: 'travel_administrator'
     });
@@ -68,6 +76,12 @@ describe('/hotels', () => {
       email: 'john@mccain.com',
       isVerified: 1,
       role: 'requester'
+    });
+    notOwnerToken = await tokenizer.signToken({
+      id: 2,
+      email: 'john@mccain00.com',
+      isVerified: 1,
+      role: 'travel_administrator'
     });
   });
 

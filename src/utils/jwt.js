@@ -13,6 +13,7 @@ class tokenizer {
   async signToken(user) {
     return JWT.sign({
       email: user.email,
+      name: user.firstName,
       userId: user.id,
       verified: user.isVerified,
       role: user.role,

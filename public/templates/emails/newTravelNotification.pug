@@ -24,15 +24,9 @@ p
 h4 Dear #{name},
 div
 p
-strong Welcome to BareFoot Nomad,
-p Click the button below to activate your account
-p
-button(class='link-btn').
-     #[a( href!=`${link}` ) Verify Account]
-p If you didn't request this, simply ignore this message.
-p
-p The link expires after 24 hours to regenerate a new link for your email verification please click the button below.
-button(class='link-btn').
-     #[a( href!=`${regenerateLink}` ) Regenerate Link]
-p Yours,
-p bareFoot Team
+strong Your application has been sent to the manager for approval.
+
+p BareFoot Nomad Team
+
+p If you want to opt-out of the notification clink the link below
+a( href!=`${link}` ) Opt-out

@@ -15,7 +15,7 @@ const userData = {
     firstName: 'bonbon',
     lastName: 'vic',
     email: 'nyabuyabonvic@gmail.com',
-    password: 'bcjdfyhfgiutgast7687643'
+    password: 'bcjdfyhfgiutgast7687643',
   },
   user3: {
     firstName: 'bonbon',
@@ -23,6 +23,22 @@ const userData = {
     email: 'nyabuyabonvic1@gmail.com',
     password: 'bcjdfyhfgiutgast7687643',
     isVerified: true
+  },
+  user4: {
+    lastName: 'Mastel',
+    firstName: 'Pierrette',
+    email: 'mastel@gmail.com',
+    password: '123456789876543',
+    isVerified: true,
+    receiveNotification: true,
+  },
+  user5: {
+    lastName: 'Mastel',
+    firstName: 'Pierrette',
+    email: 'mastel56@gmail.com',
+    password: '123456789876543',
+    isVerified: true,
+    receiveNotification: false,
   }
 };
 

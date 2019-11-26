@@ -36,7 +36,7 @@ class Requests {
     if (!requests) {
       return Responses.handleError(404, 'No Requests found with such id', res);
     }
-    return Responses.handleSuccess(200, 'Successfully fetched the request', res, requests);
+    return Responses.handleSuccess(200, 'Successfully fetched the requests', res, requests);
   }
 
   /**

@@ -10,6 +10,7 @@ import tripsData from './mock-data/trips-data';
 import Hash from '../utils/hash';
 import tokenizer from '../utils/jwt';
 import truncate from './scripts/truncate';
+import requestData from './mock-data/request';
 
 should();
 use(chaiHttp);
@@ -19,16 +20,19 @@ const prefix = '/api/v1';
 describe('/Requests', () => {
   let token = '';
   let requestid = '';
+  let manager = '';
   before(async () => {
     await truncate();
     await roomfactory(tripsData.rooms[0]);
     await roomfactory(tripsData.rooms[1]);
     await hotelfactory(tripsData.hotels[0]);
+    manager = await userfactory(requestData.users[0]);
     await userfactory({
       firstName: 'John',
       lastName: 'McCain',
       password: Hash.generateSync('1234567e'),
-      email: 'john@mccain.com'
+      email: 'john@mccain.com',
+      lineManagerId: manager.id
     });
     token = await tokenizer.signToken({
       id: 1,
@@ -64,7 +68,7 @@ describe('/Requests', () => {
       .set('Authorization', `Bearer ${token}`)
       .end((err, res) => {
         res.status.should.be.equal(200);
-        res.body.message.should.equal('Successfully fetched the request');
+        res.body.message.should.equal('Successfully fetched the requests');
         done();
       });
   });
@@ -111,6 +115,12 @@ describe('/Requests', () => {
   describe('Requests not found', () => {
     beforeEach(async () => {
       truncate();
+      await userfactory({
+        firstName: 'John',
+        lastName: 'McCain',
+        password: Hash.generateSync('1234567e'),
+        email: 'john@mccain.com'
+      });
       token = await tokenizer.signToken({
         id: 1,
         email: 'john@mccain.com',
