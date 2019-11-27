@@ -17,6 +17,10 @@ const tripfactory = async (data) => {
   await db.room.create(data);
 };
 
+const locationfactory = async (data) => {
+  await db.location.create(data);
+};
+
 const requestfactory = async (data) => {
   await db.request.create(data);
 };
@@ -26,5 +30,6 @@ export {
   hotelfactory,
   roomfactory,
   tripfactory,
-  requestfactory
+  requestfactory,
+  locationfactory
 };

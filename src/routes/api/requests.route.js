@@ -3,8 +3,8 @@ import { verifyUser } from '../../middlewares/checkToken';
 import requests from '../../controllers/request.controller';
 import getRequestByStatus from '../../middlewares/queryRequestByStatus';
 import catchErrors from '../../utils/helper';
-import checkRole from '../../middlewares/roleAuthorization';
 import checkRequestLineManger from '../../middlewares/checkRequestLineManager';
+import authorize from '../../middlewares/roleAuthorization';
 
 const router = express.Router();
 
@@ -160,7 +160,7 @@ router.get(
  *      500:
  *        description: exception errors
  */
-router.get('/requests/manager', verifyUser, checkRole.checkIsManager, catchErrors(requests.getLineManagerRequest));
+router.get('/requests/manager', verifyUser, authorize(['manager']), catchErrors(requests.getLineManagerRequest));
 
 /**
  * @swagger
@@ -331,6 +331,6 @@ router.get(
  *      400:
  *        description: invalid inputs
  */
-router.patch('/request/:id', verifyUser, checkRole.checkIsManager, checkRequestLineManger, catchErrors(requests.approveRequest));
+router.patch('/request/:id', verifyUser, authorize(['manager']), checkRequestLineManger, catchErrors(requests.approveRequest));
 
 export default router;

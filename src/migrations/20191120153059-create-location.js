@@ -6,8 +6,21 @@ module.exports = {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    name: {
+    country: {
+      allowNull: false,
       type: Sequelize.STRING
+    },
+    city: {
+      allowNull: false,
+      type: Sequelize.STRING
+    },
+    long: {
+      allowNull: true,
+      type: Sequelize.FLOAT
+    },
+    lat: {
+      allowNull: true,
+      type: Sequelize.FLOAT
     },
     createdAt: {
       allowNull: false,

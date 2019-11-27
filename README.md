@@ -29,10 +29,10 @@ Make company global travel and accommodation easy and convenient for the strong 
 
 - Run migrations using `npm run migrate`
 
-- Run `npx sequelize-cli db:seed:all` for commit the seeds to the database
+- Run `npm run db:seed` for commit the seeds to the database
 
 - To undo:
-       - all seeders run `npx sequelize-cli db:seed:undo`
+       - all seeders run `npm run db:seed:undo`
        - all migrations run `npm run migrate:undo`
 
 #### Run the app

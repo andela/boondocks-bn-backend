@@ -105,5 +105,4 @@ typings/
 trash/
 .DS_Store
 src/migrations/.DS_Store
-
 public/images

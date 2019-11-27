@@ -81,6 +81,20 @@ const twoWaySchema = Joi.object().keys({
   }
 });
 
+const hotelSchema = Joi.object().keys({
+  name: Joi.string().strict().trim().required(),
+  description: Joi.string().strict().trim().required(),
+  services: Joi.string().strict().required(),
+  street: Joi.string().strict().required(),
+  city: Joi.string().strict().required(),
+  country: Joi.string().strict().required()
+}).options({
+  abortEarly: false,
+  language: {
+    key: '{{key}} '
+  }
+});
+
 const updateTripSchema = Joi.object().keys({
   hotelId: Joi.number().required(),
   type: Joi.string().required().strict().trim()
@@ -99,6 +113,20 @@ const updateTripSchema = Joi.object().keys({
   language: {
     key: '{{key}} '
   }
+});
+
+const roomSchema = Joi.object().keys({
+  name: Joi.string().required(),
+  description: Joi.string().required(),
+  type: Joi.string().required(),
+  cost: Joi.number().required(),
+  hotelId: Joi.number().required()
+}).options({
+  abortEarly: false,
+  language: {
+    key: '{{key}} '
+  },
+  allowUnknown: true
 });
 
 const roleSchema = Joi.object().keys({
@@ -123,7 +151,7 @@ const commentSchema = Joi.object()
   .keys({
     comment: Joi.string()
       .strict()
-      .required(),
+      .required()
   })
   .options({
     abortEarly: false,
@@ -141,5 +169,7 @@ export default {
   '/trips/return': twoWaySchema,
   '/auth/user/role': roleSchema,
   '/requests/:requestId/comment': commentSchema,
-  '/trips/:tripId': updateTripSchema
+  '/trips/:tripId': updateTripSchema,
+  '/hotels': hotelSchema,
+  '/hotels/:hotelId/rooms': roomSchema,
 };

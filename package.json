@@ -8,7 +8,8 @@
       "src/migrations",
       "src/database",
       "src/tests",
-      "src/config"
+      "src/config",
+      "src/services/files.service.js"
     ]
   },
   "scripts": {
@@ -17,6 +18,8 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start": "node -r dotenv/config dist/index.js",
     "migrate": "babel-node ./src/scripts/migrate",
+    "db:seed": "babel-node ./src/scripts/seed",
+    "db:seed:undo": "babel-node ./src/scripts/seed-rollback",
     "migrate:undo": "babel-node ./src/scripts/rollback",
     "db:migrate": "node ./dist/scripts/migrate",
     "db:migrate:undo": "node ./dist/scripts/rollback",
@@ -30,6 +33,7 @@
   "dependencies": {
     "@hapi/joi": "^15.0.3",
     "@sendgrid/mail": "^6.4.0",
+    "aws-sdk": "^2.580.0",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "child-process-promise": "^2.2.1",
@@ -45,7 +49,7 @@
     "method-override": "^2.3.10",
     "methods": "^1.1.2",
     "morgan": "^1.9.1",
-    "node-mocks-http": "^1.8.0",
+    "multer": "^1.4.2",
     "nodemon": "^1.19.4",
     "passport": "^0.4.0",
     "passport-facebook": "^3.0.0",
@@ -60,9 +64,12 @@
     "swagger-jsdoc": "^3.4.0",
     "swagger-ui-express": "^4.1.2",
     "underscore": "^1.9.1",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "on-finished": "^2.3.0"
   },
   "devDependencies": {
+    "form-data": "^3.0.0",
+    "mock-express-request": "^0.2.2",
     "@babel/cli": "^7.6.4",
     "@babel/core": "^7.6.4",
     "@babel/node": "^7.6.3",

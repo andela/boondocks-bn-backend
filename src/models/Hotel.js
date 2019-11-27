@@ -3,8 +3,10 @@ module.exports = (sequelize, DataTypes) => {
     locationId: DataTypes.INTEGER,
     name: DataTypes.STRING,
     image: DataTypes.STRING,
+    street: DataTypes.STRING,
     description: DataTypes.STRING,
-    services: DataTypes.STRING
+    services: DataTypes.STRING,
+    userId: DataTypes.INTEGER
   }, {});
   Hotel.associate = (models) => {
     Hotel.hasMany(models.booking, {
@@ -13,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
     });
     Hotel.hasMany(models.trip, {
       foreignkey: 'hotelId',
+      onDelete: 'CASCADE'
+    });
+    Hotel.belongsTo(models.location, {
+      foreignkey: 'locationId',
       onDelete: 'CASCADE'
     });
   };

@@ -46,4 +46,5 @@ const verifyUser = async (req, res, next) => {
   res.locals.user = user;
   next();
 };
+
 export { decodeQueryToken, verifyUser };

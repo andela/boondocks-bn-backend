@@ -1,6 +1,6 @@
 import express from 'express';
 import { validation } from '../../validation/validation';
-import roleAuthorization from '../../middlewares/roleAuthorization';
+import authorize from '../../middlewares/roleAuthorization';
 import { verifyUser } from '../../middlewares/checkToken';
 import roles from '../../controllers/roles.controller';
 import users from '../../controllers/users.controller';
@@ -51,7 +51,7 @@ const router = express.Router();
 router.get(
   '/auth/users',
   verifyUser,
-  roleAuthorization.checkIsSuperAdministrator,
+  authorize(['super_administrator']),
   catchErrors(users.fetchAllUsers)
 );
 /**
@@ -101,7 +101,8 @@ router.patch(
   '/auth/user/role',
   verifyUser,
   validation,
-  roleAuthorization.checkIsSuperAdministrator,
+  authorize(['super_administrator']),
   catchErrors(roles.changeRole)
 );
+
 export default router;

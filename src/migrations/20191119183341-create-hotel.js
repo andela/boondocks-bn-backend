@@ -9,6 +9,9 @@ module.exports = {
     locationId: {
       type: Sequelize.INTEGER
     },
+    userId: {
+      type: Sequelize.INTEGER
+    },
     name: {
       type: Sequelize.STRING
     },
@@ -16,6 +19,9 @@ module.exports = {
       type: Sequelize.STRING
     },
     description: {
+      type: Sequelize.STRING
+    },
+    street: {
       type: Sequelize.STRING
     },
     services: {

@@ -6,7 +6,7 @@ import db from '../models';
 /**
  * Class for Trips
  */
-class Trips {
+class Trip {
   /**
    * Creates a return trip
    * @param {*} req
@@ -144,4 +144,4 @@ class Trips {
   }
 }
 
-export default new Trips();
+export default new Trip();

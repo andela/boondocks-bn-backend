@@ -1,7 +1,7 @@
 const hash = require('bcrypt');
 const config = require('../../config');
 
-const passwordHash = hash.hashSync('12345678jfhyry', config.HASH_SALT_ROUNDS);
+const passwordHash = hash.hashSync('12345678', config.HASH_SALT_ROUNDS);
 
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.bulkInsert('users', [{
@@ -28,6 +28,16 @@ module.exports = {
     email: 'line@manager.com',
     password: passwordHash,
     role: 'manager',
+    isVerified: true,
+    createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+    updatedAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+  },
+  {
+    firstName: 'travel',
+    lastName: 'Admin',
+    email: 'travel@administrator.com',
+    password: passwordHash,
+    role: 'travel_administrator',
     isVerified: true,
     createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
     updatedAt: Sequelize.literal('CURRENT_TIMESTAMP'),
