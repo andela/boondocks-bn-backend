@@ -94,10 +94,6 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'lineManagerId',
       as: 'LineManager',
     });
-    User.hasMany(models.request, {
-      foreignKey: 'userId',
-      onDelete: 'CASCADE'
-    });
   };
   return User;
 };

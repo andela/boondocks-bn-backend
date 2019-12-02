@@ -1,8 +1,7 @@
 import db from '../../models';
 
 const userfactory = async (data) => {
-  const user = await db.user.create(data);
-  return user;
+  await db.user.create(data);
 };
 
 const hotelfactory = async (data) => {

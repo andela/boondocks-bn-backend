@@ -15,8 +15,7 @@ class tokenizer {
       email: user.email,
       userId: user.id,
       verified: user.isVerified,
-      role: user.role,
-      lineManagerId: user.lineManagerId
+      role: user.role
     }, config.secret, { expiresIn: '24h' });
   }
 

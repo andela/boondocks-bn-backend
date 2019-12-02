@@ -1,7 +1,6 @@
-const hash = require('bcrypt');
-const config = require('../../config');
+const hash = require('../../utils/hash');
 
-const passwordHash = hash.hashSync('12345678jfhyry', config.HASH_SALT_ROUNDS);
+const passwordHash = hash.generateSync('12345678');
 
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.bulkInsert('users', [{

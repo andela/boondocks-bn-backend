@@ -13,7 +13,7 @@ const queryRequestByStatus = async (req, res, next) => {
       if (requests.length === 0) {
         return Responses.handleError(404, 'No Requests found', res);
       }
-      return Responses.handleSuccess(200, 'successfully fetched the requests', res, requests);
+      return Responses.handleSuccess(200, 'Succesfully fetched the requests', res, requests);
     }
     return Responses.handleError(400, 'wrong request status', res);
   }

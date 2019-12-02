@@ -1,5 +1,4 @@
 import db from '../models';
-import ErrorHandler from '../utils/error';
 
 const createRequest = async (userId, type) => {
   const request = await db.request.create(
@@ -63,38 +62,10 @@ const getRequestById = async (requestId) => {
   return request;
 };
 
-const getManagerRequest = async (userId) => {
-  const userRequests = await db.user.findAll({
-    attributes: [],
-    where: {
-      lineManagerId: userId
-    },
-    include: [{
-      model: db.request,
-      where: {
-        status: 'open'
-      },
-      include: [{
-        model: db.trip
-      }]
-    }]
-  });
-
-  const requests = [];
-  await userRequests.forEach(user => {
-    requests.push(...user.requests);
-  });
-  if (requests.length === 0) {
-    throw new ErrorHandler('No requests found for Approval', 404);
-  }
-  return requests;
-};
-
 export {
   createRequest,
   getRequestbyStatus,
   getAllRequest,
   getOneRequest,
-  getRequestById,
-  getManagerRequest
+  getRequestById
 };

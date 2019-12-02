@@ -48,13 +48,13 @@ describe('/Requests', () => {
       });
   });
 
-  it('GET /request - user should be able to get all his/her requests', (done) => {
+  it('POST /request - user should be able to get all his/her requests', (done) => {
     request(app)
       .get(`${prefix}/requests`)
       .set('Authorization', `Bearer ${token}`)
       .end((err, res) => {
         res.status.should.be.equal(200);
-        res.body.message.should.equal('Successfully fetched the requests');
+        res.body.message.should.equal('Succesfully fetched the requests');
         done();
       });
   });
@@ -64,7 +64,7 @@ describe('/Requests', () => {
       .set('Authorization', `Bearer ${token}`)
       .end((err, res) => {
         res.status.should.be.equal(200);
-        res.body.message.should.equal('Successfully fetched the request');
+        res.body.message.should.equal('Succesfully fetched the request');
         done();
       });
   });
@@ -93,7 +93,7 @@ describe('/Requests', () => {
       .set('Authorization', `Bearer ${token}`)
       .end((err, res) => {
         res.status.should.be.equal(200);
-        res.body.message.should.equal('successfully fetched the requests');
+        res.body.message.should.equal('Succesfully fetched the requests');
         done();
       });
   });
