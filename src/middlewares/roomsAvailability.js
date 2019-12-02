@@ -11,6 +11,31 @@ import tripService from '../services/Trip.service';
 const checkForRooms = async (req, res, next) => {
   const { Op } = db.Sequelize;
 
+  const { rooms } = req.body;
+
+  let bookedRooms = await db.room.findAndCountAll({
+    where: {
+      id: {
+        [Op.or]: req.body.rooms
+      }
+    },
+    attributes: ['id']
+  });
+
+  bookedRooms = bookedRooms.rows.map(room => room.id);
+
+  if (bookedRooms.length > 0) {
+    const invalidRooms = rooms.filter(room => !bookedRooms.includes(room));
+
+    if (invalidRooms.length > 0) {
+      return Responses.handleSuccess(409, 'rooms does not exist', res, { invalidRooms });
+    }
+  }
+
+  if (bookedRooms.length === 0) {
+    return Responses.handleSuccess(409, 'rooms does not exist ', res, { rooms });
+  }
+
   const unavailableRooms = await db.room.findAndCountAll({
     where: {
       id: {
@@ -24,8 +49,8 @@ const checkForRooms = async (req, res, next) => {
   });
 
   if (unavailableRooms.count > 0) {
-    const bookedRooms = unavailableRooms.rows.map(room => room.id);
-    return Responses.handleSuccess('409', 'rooms already booked', res, { unAvailableRooms: bookedRooms });
+    bookedRooms = unavailableRooms.rows.map(room => room.id);
+    return Responses.handleSuccess(409, 'rooms already booked', res, { unAvailableRooms: bookedRooms });
   }
   next();
 };

@@ -44,6 +44,21 @@ const oneWaySchema = Joi.object().keys({
   }
 });
 
+const date = new Date();
+date.setHours(0, 0, 0, 0);
+
+const bookingSchema = Joi.object().keys({
+  hotelId: Joi.required(),
+  arrivalDate: Joi.date().iso().min(date.toISOString()),
+  leavingDate: Joi.date().iso().greater(Joi.ref('arrivalDate')).required(),
+  rooms: Joi.required()
+}).options({
+  abortEarly: false,
+  language: {
+    key: '{{key}} '
+  }
+});
+
 const updateUserInfoSchema = Joi.object().keys({
   firstName: Joi.string().strict().trim(),
   lastName: Joi.string().strict().trim(),
@@ -172,4 +187,5 @@ export default {
   '/trips/:tripId': updateTripSchema,
   '/hotels': hotelSchema,
   '/hotels/:hotelId/rooms': roomSchema,
+  '/booking': bookingSchema
 };

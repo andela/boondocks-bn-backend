@@ -33,7 +33,6 @@ class Trip {
 
     const requestId = await createRequest(currentUser.userId, 'single');
 
-
     tripService.create({
       hotelId,
       type,
@@ -89,6 +88,7 @@ class Trip {
         leavingFrom,
         goingTo,
         travelDate,
+        returnDate,
         reason,
         rooms
       } = travel;
@@ -99,6 +99,7 @@ class Trip {
         leavingFrom,
         goingTo,
         travelDate,
+        returnDate,
         reason,
         rooms,
         requestId,

@@ -3,7 +3,9 @@ module.exports = (sequelize, DataTypes) => {
     userId: DataTypes.INTEGER,
     hotelId: DataTypes.INTEGER,
     roomId: DataTypes.INTEGER,
-    tripId: DataTypes.INTEGER
+    tripId: DataTypes.INTEGER,
+    arrivalDate: DataTypes.DATE,
+    leavingDate: DataTypes.DATE,
   }, {});
   Booking.associate = (models) => {
     Booking.belongsTo(models.user, {

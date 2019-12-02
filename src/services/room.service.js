@@ -19,6 +19,23 @@ class RoomService {
     const room = await db.room.create(params);
     return room;
   }
+
+  /**
+   * Change room status
+   *
+   * @param {Number} roomId ID for the room
+   * @param {String} status new room status
+   * @returns {Object} room
+   */
+  async changeStatus(roomId, status) {
+    const updatedRoom = await db.room.update({ status }, {
+      where: {
+        id: roomId
+      }
+    });
+
+    return updatedRoom;
+  }
 }
 
 export default new RoomService();

@@ -26,7 +26,8 @@ describe('/Requests', () => {
     await roomfactory(tripsData.rooms[0]);
     await roomfactory(tripsData.rooms[1]);
     await hotelfactory(tripsData.hotels[0]);
-    manager = await userfactory(requestData.users[0]);
+    await userfactory(requestData.users[0]);
+    manager = await userfactory(requestData.users[1]);
     await userfactory({
       firstName: 'John',
       lastName: 'McCain',

@@ -1,4 +1,6 @@
 import db from '../models';
+import bookingService from './booking.service';
+import roomService from './room.service';
 
 /**
  * Class trip service, creates trips
@@ -34,20 +36,18 @@ class Trip {
       returnDate,
       reason,
     });
-
     rooms.forEach(async (room) => {
-      await db.booking.create({
+      await bookingService.create({
         hotelId,
         userId,
-        roomId: room,
+        room,
+        arrivalDate: travelDate,
+        leavingDate: returnDate,
         tripId: trip.id
       });
-      await db.room.update({ status: 'reserved' }, {
-        where: {
-          id: room
-        }
-      });
+      await roomService.changeStatus(room, 'reserved');
     });
+
     return trip;
   }
 

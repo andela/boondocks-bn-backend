@@ -10,6 +10,7 @@ import requestRouter from './requests.route';
 import commentsRouter from './comments.route';
 import hotelsRouter from './hotels.route';
 import notificationRouter from './notifications.route';
+import bookingRouter from './booking.route';
 
 const specs = swaggerJsdoc(swaggerDefinition);
 
@@ -31,5 +32,6 @@ router.use(prefix, commentsRouter);
 
 router.use(prefix, hotelsRouter);
 router.use(prefix, notificationRouter);
+router.use(prefix, bookingRouter);
 
 export default router;

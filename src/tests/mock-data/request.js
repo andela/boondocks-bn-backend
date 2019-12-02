@@ -7,7 +7,7 @@ const request = {
       lastName: 'case',
       email: 'testcase@email.co',
       password: Hash.generateSync('fghtttfht55'),
-      role: 'manager'
+      role: 'manager',
     },
     {
       firstName: 'new',

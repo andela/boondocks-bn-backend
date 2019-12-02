@@ -1,3 +1,7 @@
+const leavingDate = new Date();
+const nextDay = leavingDate.getDate() + 1;
+leavingDate.setDate(nextDay);
+
 export default {
   trips: [{
     leavingFrom: 'Kigali',
@@ -75,7 +79,7 @@ export default {
     reason: 'visit our agents',
     hotelId: 1,
     type: 'return',
-    rooms: [4]
+    rooms: [5]
   }],
   requests: [{
     userId: 1,
@@ -120,6 +124,16 @@ export default {
     image: 'room.png',
     cost: 5000,
     status: 'available'
+  },
+  {
+    id: 5,
+    hotelId: 1,
+    name: 'Muhabura',
+    type: 'return',
+    description: 'The best room ever',
+    image: 'room.png',
+    cost: 5000,
+    status: 'available'
   }],
   bookings: [{
     userId: 1,
@@ -140,4 +154,36 @@ export default {
     description: 'hello world',
     services: 'Catering'
   }],
+  booking: [
+    {
+      hotelId: 1,
+      arrivalDate: new Date(),
+      leavingDate,
+      rooms: [4]
+    },
+    {
+      hotelId: 1,
+      arrivalDate: '2019-02-02',
+      leavingDate,
+      rooms: [2]
+    },
+    {
+      hotelId: 1,
+      arrivalDate: new Date(),
+      leavingDate: '2019-02-02',
+      rooms: [2]
+    },
+    {
+      hotelId: 1,
+      arrivalDate: new Date(),
+      leavingDate,
+      rooms: [200, 100]
+    },
+    {
+      hotelId: 1,
+      arrivalDate: new Date(),
+      leavingDate,
+      rooms: [2, 20]
+    }
+  ]
 };

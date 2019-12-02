@@ -22,6 +22,7 @@ module.exports = {
     isVerified: true,
     createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
     updatedAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+    lineManagerId: 3
   }, {
     firstName: 'Line',
     lastName: 'Manager',

@@ -18,6 +18,12 @@ module.exports = {
     tripId: {
       type: Sequelize.INTEGER
     },
+    arrivalDate: {
+      type: Sequelize.DATE
+    },
+    leavingDate: {
+      type: Sequelize.DATE
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

@@ -25,6 +25,7 @@ describe('/trips/{ oneway | return }', () => {
     await roomfactory(tripsData.rooms[0]);
     await roomfactory(tripsData.rooms[1]);
     await roomfactory(tripsData.rooms[2]);
+    await roomfactory(tripsData.rooms[3]);
     await requestfactory(tripsData.requests[0]);
 
     await db.trip.create(tripsData.trips[3]);
