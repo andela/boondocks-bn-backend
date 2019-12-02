@@ -48,10 +48,12 @@ const checkForRooms = async (req, res, next) => {
     attributes: ['id']
   });
 
+
   if (unavailableRooms.count > 0) {
     bookedRooms = unavailableRooms.rows.map(room => room.id);
     return Responses.handleSuccess(409, 'rooms already booked', res, { unAvailableRooms: bookedRooms });
   }
+
   next();
 };
 

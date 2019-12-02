@@ -1,5 +1,9 @@
 import Responses from '../utils/response';
-import { createRequest, getRequestById } from '../services/request.service';
+import {
+  createRequest,
+  getRequestById,
+  getUserTripsStats,
+} from '../services/request.service';
 import tripService from '../services/Trip.service';
 import db from '../models';
 import Mailer from '../services/Mailer.services';
@@ -33,7 +37,6 @@ class Trip {
 
     const requestId = await createRequest(currentUser.userId, 'single');
 
-
     tripService.create({
       hotelId,
       type,
@@ -60,12 +63,15 @@ class Trip {
     }
 
     const { lineManager } = currentUser;
+
     const notification = await NotificationService.createNotification({
       requestId,
       messages: 'New Travel Requested',
       type: 'new_request',
       userId: lineManager,
     });
+
+
     NotificationUtil.echoNotification(req, notification, 'new_request', lineManager);
     return Responses.handleSuccess(201, 'created', res, request);
   }
@@ -190,6 +196,29 @@ class Trip {
     });
     NotificationUtil.echoNotification(req, notification, 'edited_request', lineManager);
     return Responses.handleSuccess(201, 'trip details updated successfully', res, trip);
+  }
+
+  /**
+   * Get a trip request
+   * @param {object} req request
+   * @param {object} res response
+   * @return {Object} Get requests with pending status
+   */
+  async statistics(req, res) {
+    const { user } = res.locals;
+    const { fromDate } = req.body;
+    const params = {
+      user,
+      fromDate,
+      req,
+    };
+    const data = await getUserTripsStats(params);
+    const trips = data.map(d => d.trips).flat();
+    return Responses
+      .handleSuccess(200, 'Trip Statistics Successfully retrieved', res, {
+        total: data.length,
+        trips,
+      });
   }
 }
 

@@ -1,7 +1,11 @@
 import express from 'express';
 import trips from '../../controllers/trips.controller';
-import { validation, validateMultiCity } from '../../validation/validation';
-import { checkForRooms, checkForMultiCityRooms, checkForRoomsOnUpdate } from '../../middlewares/roomsAvailability';
+import { validateMultiCity, validation } from '../../validation/validation';
+import {
+  checkForMultiCityRooms,
+  checkForRooms,
+  checkForRoomsOnUpdate,
+} from '../../middlewares/roomsAvailability';
 import { verifyUser } from '../../middlewares/checkToken';
 import catchErrors from '../../utils/helper';
 
@@ -156,7 +160,8 @@ router.post('/trips/return', verifyUser, validation, checkForRooms, catchErrors(
  * /trips/multi-city:
  *   post:
  *     summary: Make a multi city request
- *     description: This creates a return multi city trips and book required accomodation
+ *     description: This creates a return multi city trips and book required
+ *       accomodation
  *     tags:
  *       - Trips
  *     requestBody:
@@ -231,16 +236,16 @@ router.post('/trips/return', verifyUser, validation, checkForRooms, catchErrors(
  */
 router.post('/trips/multi-city', verifyUser, validateMultiCity, checkForMultiCityRooms, catchErrors(trips.createMultiCitiesTrip));
 
-
 /**
  * @swagger
  *
  * /trips/:tripId:
  *   post:
  *     summary: Update trip details
- *     description: This route allows you to update the trip details of an 'open' travel request
+ *     description: This route allows you to update the trip details of an
+ *       'open' travel request
  *     tags:
- *       - Trip
+ *       - Trips
  *     requestBody:
  *       content:
  *         application/json:
@@ -309,13 +314,87 @@ router.post('/trips/multi-city', verifyUser, validateMultiCity, checkForMultiCit
  *       403:
  *         description: you can only edit your own trips
  */
-
 router.patch(
   '/trips/:tripId',
   verifyUser,
   validation,
   catchErrors(checkForRoomsOnUpdate),
   catchErrors(trips.updateTrip)
+);
+
+/**
+ * @swagger
+ *
+ * /trips/stats:
+ *   post:
+ *     summary: Get trip stats for a particular user in the X past timeframe
+ *     description: Get trip stats for a particular user in the X past timeframe
+ *     tags:
+ *       - Trips
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: integer
+ *               fromDate:
+ *                 type: string
+ *     produces:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *               message:
+ *                 type: string
+ *               data:
+ *                 type: object
+ *                 properties:
+ *                   totals:
+ *                     type: integer
+ *                   trips:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: integer
+ *                         leavingFrom:
+ *                           type: string
+ *                         goingTo:
+ *                           type: string
+ *                         travelDate:
+ *                           type: string
+ *                         returnDate:
+ *                           type: string
+ *                         reason:
+ *                           type: string
+ *                         hotelId:
+ *                           type: integer
+ *                         userId:
+ *                           type: integer
+ *                         status:
+ *                           type: string
+ *                         updatedAt:
+ *                           type: string
+ *                         createAt:
+ *                           type: string
+ *     responses:
+ *       200:
+ *         description: Retrieved successfully
+ *       422:
+ *         description: Invalid input
+ *       401:
+ *         description: Not authorized
+ */
+router.post(
+  '/trips/stats',
+  verifyUser,
+  validation,
+  catchErrors(trips.statistics)
 );
 
 export default router;

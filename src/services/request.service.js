@@ -1,16 +1,18 @@
-/* eslint-disable prefer-destructuring */
-/* eslint-disable function-paren-newline */
 import db from '../models';
 import ErrorHandler from '../utils/error';
+
+const { Sequelize } = db;
+const { Op } = Sequelize;
 
 const createRequest = async (userId, type) => {
   const request = await db.request.create(
     {
-      userId, type
+      userId,
+      type,
     },
     {
       returning: true,
-    }
+    },
   );
   return request.id;
 };
@@ -211,6 +213,64 @@ const getSearchedRequests = async (userId, body) => {
   return requests;
 };
 
+const getUserTripsStats = async ({ user, fromDate, req }) => {
+  const { userId, role } = user;
+
+  if (['manager', 'requester'].indexOf(role) === -1) {
+    throw new ErrorHandler(`User with role "${role}" cannot access this service!`, 400);
+  }
+
+  let statsUserId = userId;
+
+  if (role === 'manager') {
+    statsUserId = req.body.userId;
+
+    if (!statsUserId) {
+      throw new ErrorHandler('\'userId\' field is required', 422);
+    }
+
+    const statsUser = await db.user.findByPk(statsUserId);
+
+    if (!statsUser) {
+      throw new ErrorHandler('User not found', 404);
+    }
+
+    if (!statsUser.lineManagerId) {
+      throw new ErrorHandler('User with no LineManager', 422);
+    }
+
+    if (userId !== statsUser.lineManagerId) {
+      throw new ErrorHandler('You only see stats of users you manage', 400);
+    }
+  }
+
+  const nowDate = new Date();
+
+  if (fromDate.getTime() > nowDate.getTime()) {
+    throw new ErrorHandler('\'fromDate\' has to be in the past', 422);
+  }
+
+  const requests = await db.request.findAll({
+    where: {
+      status: 'approved',
+      userId: statsUserId,
+    },
+    include: [
+      {
+        model: db.trip,
+        where: {
+          travelDate: {
+            [Op.between]: [fromDate, nowDate],
+          },
+        },
+      },
+    ],
+    attributes: []
+  }, { raw: true });
+
+  return requests;
+};
+
 export {
   createRequest,
   getRequestbyStatus,
@@ -220,5 +280,6 @@ export {
   getManagerRequest,
   updateRequestStatus,
   checkUserBelongsToManager,
-  getSearchedRequests
+  getSearchedRequests,
+  getUserTripsStats,
 };

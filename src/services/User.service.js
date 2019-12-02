@@ -24,27 +24,28 @@ class UserServices {
    * @returns {object} return the user's data
    */
   async getUserById(id) {
-    const userData = await db.user.findOne({
-      where: { id },
-      attributes: [
-        'firstName',
-        'lastName',
-        'email',
-        'isVerified',
-        'birthDate',
-        'residenceAddress',
-        'preferredLanguage',
-        'preferredCurrency',
-        'department',
-        'lineManagerId',
-        'gender',
-        'lastLogin',
-        'role',
-        'phoneNumber'
-      ],
-      include: ['LineManager']
-    });
-
+    const userData = await db.user.findByPk(
+      id,
+      {
+        attributes: [
+          'firstName',
+          'lastName',
+          'email',
+          'isVerified',
+          'birthDate',
+          'residenceAddress',
+          'preferredLanguage',
+          'preferredCurrency',
+          'department',
+          'lineManagerId',
+          'gender',
+          'lastLogin',
+          'role',
+          'phoneNumber',
+        ],
+        include: ['LineManager'],
+      },
+    );
     return userData;
   }
 

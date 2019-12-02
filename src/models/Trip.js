@@ -20,15 +20,15 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Trip.associate = (models) => {
     Trip.belongsTo(models.user, {
-      foreignkey: 'userId',
+      foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
     Trip.belongsTo(models.hotel, {
-      foreignkey: 'hotelId',
+      foreignKey: 'hotelId',
       onDelete: 'CASCADE'
     });
     Trip.belongsTo(models.request, {
-      foreignkey: 'requestId',
+      foreignKey: 'requestId',
       onDelete: 'CASCADE'
     });
   };
