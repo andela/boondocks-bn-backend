@@ -1,5 +1,10 @@
 import Responses from '../utils/response';
-import { getAllRequest, getOneRequest, getManagerRequest } from '../services/request.service';
+import {
+  getAllRequest,
+  getOneRequest,
+  updateRequestStatus,
+  getManagerRequest
+} from '../services/request.service';
 
 /**
  * Class requests
@@ -27,8 +32,7 @@ class Requests {
    * @returns {object} successful fetched the requests
    */
   async getOne(req, res) {
-    const currentUser = res.locals.user;
-    const requests = await getOneRequest(currentUser.userId, req.params.id);
+    const requests = await getOneRequest(req.params.id);
     if (!requests) {
       return Responses.handleError(404, 'No Requests found with such id', res);
     }
@@ -45,6 +49,23 @@ class Requests {
     const currentUser = res.locals.user;
     const requests = await getManagerRequest(currentUser.userId);
     return Responses.handleSuccess(200, 'Successfully fetched the requests', res, requests);
+  }
+
+  /**
+   *
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} succesful approved or rejected a request
+   */
+  async approveRequest(req, res) {
+    const { status } = req.body;
+    const { id } = req.params;
+
+    await updateRequestStatus(id, status);
+
+    const request = await getOneRequest(id);
+
+    return Responses.handleSuccess(200, `Succesfully ${status} request`, res, request);
   }
 }
 

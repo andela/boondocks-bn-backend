@@ -4,6 +4,7 @@ import requests from '../../controllers/request.controller';
 import getRequestByStatus from '../../middlewares/queryRequestByStatus';
 import catchErrors from '../../utils/helper';
 import checkRole from '../../middlewares/roleAuthorization';
+import checkRequestLineManger from '../../middlewares/checkRequestLineManager';
 
 const router = express.Router();
 
@@ -12,7 +13,6 @@ const router = express.Router();
  *
  * /request:
  *  get:
- *    security:
  *    summary: this gets all the requests from a specific user
  *    description: Takes the users token and query(optional)
  *    tags:
@@ -93,7 +93,6 @@ router.get(
  *
  * /request:
  *  get:
- *    security:
  *    summary: this gets all the requests from a specific user to the line manager
  *    description: Takes the line manager token
  *    tags:
@@ -166,13 +165,17 @@ router.get('/requests/manager', verifyUser, checkRole.checkIsManager, catchError
 /**
  * @swagger
  *
- * /request:
+ * /requests:
  *  get:
- *    security:
  *    summary: this gets single the requests from a specific user
  *    description: Takes the users token
  *    tags:
  *      - Requests
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: integer
  *    produces:
  *      application/json:
  *        properties:
@@ -239,5 +242,95 @@ router.get(
   verifyUser,
   catchErrors(requests.getOne)
 );
+
+
+/**
+ * @swagger
+ *
+ * /request:
+ *  patch:
+ *    summary: update users request status using line manager
+ *    description: Takes the users token
+ *    tags:
+ *      - Requests
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: integer
+ *    requestBody:
+ *        content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                  type: string
+ *    produces:
+ *      application/json:
+ *        properties:
+ *          status:
+ *            type: string
+ *          message:
+ *            type: string
+ *          data:
+ *            type: array
+ *            items:
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: integer
+ *                status:
+ *                  type: string
+ *                userId:
+ *                  type: integer
+ *                type:
+ *                   type: string
+ *                createdAt:
+ *                  type: string
+ *                updatedAt:
+ *                  type: string
+ *                trips:
+ *                  type: array
+ *                  items:
+ *                    type: object
+ *                    properties:
+ *                      id:
+ *                        type: integer
+ *                      userId:
+ *                        type: integer
+ *                      hotelId:
+ *                        type: integer
+ *                      type:
+ *                        type: string
+ *                      leavingFrom:
+ *                        type: string
+ *                      goingTo:
+ *                        type: string
+ *                      travelDate:
+ *                        type: string
+ *                      returnDate:
+ *                        type: string
+ *                      reason:
+ *                        type: string
+ *                      requestId:
+ *                        type: integer
+ *                      createdAt:
+ *                        type: string
+ *                      updatedAt:
+ *                        type: string
+ *    responses:
+ *      200:
+ *        description: success
+ *      401:
+ *        description: unauthorized
+ *      500:
+ *        description: error occurred
+ *      403:
+ *        description: can't access this request
+ *      400:
+ *        description: invalid inputs
+ */
+router.patch('/request/:id', verifyUser, checkRole.checkIsManager, checkRequestLineManger, catchErrors(requests.approveRequest));
 
 export default router;

@@ -43,10 +43,9 @@ const getAllRequest = async (userId) => {
   return requests;
 };
 
-const getOneRequest = async (userId, id) => {
+const getOneRequest = async (id) => {
   const request = await db.request.findOne({
     where: {
-      userId,
       id
     },
     include: [{
@@ -67,6 +66,22 @@ const getRequestById = async (requestId) => {
   });
 
   return request;
+};
+
+const checkUserBelongsToManager = async (lineManagerId, requestId) => {
+  const user = await db.request.findOne({
+    where: {
+      id: requestId
+    },
+    include: [{
+      model: db.user,
+      where: {
+        lineManagerId
+      }
+    }]
+  });
+
+  return user;
 };
 
 const getManagerRequest = async (userId) => {
@@ -96,11 +111,37 @@ const getManagerRequest = async (userId) => {
   return requests;
 };
 
+const updateRequestStatus = async (requestId, status) => {
+  const RequestStatuses = {
+    APPROVED: 'approved',
+    DECLINED: 'declined'
+  };
+
+  if (status === RequestStatuses.APPROVED || status === RequestStatuses.DECLINED) {
+    const request = await db.request.update({ status }, {
+      where: {
+        id: requestId,
+        status: 'open'
+      },
+    });
+
+    const updatedRequest = request[0] === 0;
+    if (updatedRequest) {
+      throw new ErrorHandler('Request already updated', 409);
+    }
+    return request;
+  }
+
+  throw new ErrorHandler('Please set status to "approved" or "declined"', 400);
+};
+
 export {
   createRequest,
   getRequestbyStatus,
   getAllRequest,
   getOneRequest,
   getRequestById,
-  getManagerRequest
+  getManagerRequest,
+  updateRequestStatus,
+  checkUserBelongsToManager
 };

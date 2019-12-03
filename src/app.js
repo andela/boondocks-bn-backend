@@ -58,7 +58,7 @@ app.use((err, req, res, next) => {
   if (isDevelopment !== 'development') {
     return next(err);
   }
-  logger.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${
+  logger.error(`${err.statusCode || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${
     req.ip
   } - Stack: ${err.stack}`);
 
@@ -68,7 +68,7 @@ app.use((err, req, res, next) => {
 // Production and testing error handler middleware
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res) => {
-  logger.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${
+  logger.error(`${err.statusCode || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${
     req.ip
   } - Stack: ${err.stack}`);
 

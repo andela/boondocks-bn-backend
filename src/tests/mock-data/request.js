@@ -22,7 +22,14 @@ const request = {
       email: 'testnew@email.co',
       password: Hash.generateSync('bttj6bt'),
       lineManagerId: 2
-    }
+    },
+    {
+      firstName: 'Test',
+      lastName: 'case',
+      email: 'testcase1@email.co',
+      password: Hash.generateSync('fghtttfht55'),
+      role: 'manager'
+    },
   ]
 };
 
