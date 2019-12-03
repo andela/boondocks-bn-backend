@@ -40,6 +40,45 @@ class CommentService {
       requestId
     });
   }
+
+  /**
+   * deleteCommentById - used to get user from database by email
+   * @param {string} id - id of the comment
+   * @param {string} userId - id of the comment
+   * @returns {object} user data from database
+   */
+  async deleteCommentById(id, userId) {
+    const comment = await db.comment.findOne({
+      where: { id },
+      attributes: ['isVisible']
+    });
+
+    if (!comment) {
+      throw new AppError('Entity not found', 404);
+    }
+
+    if (comment && !comment.isVisible) {
+      throw new AppError('Not authorized: entity already deleted', 403);
+    }
+
+    const commentToDelete = await db.comment.findOne({
+      where: { id },
+      attributes: ['userId']
+    });
+
+    if (commentToDelete.userId !== userId) {
+      throw new AppError('Not authorized: only the comment author can delete the comment', 403);
+    }
+
+    const deletedCommentData = await db.comment.update({ isVisible: false }, {
+      where: { id },
+      returning: true,
+      plain: true
+    });
+
+
+    return deletedCommentData[1];
+  }
 }
 
 export default new CommentService();

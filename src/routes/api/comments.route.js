@@ -6,6 +6,8 @@ import { validation } from '../../validation/validation';
 
 const router = express.Router();
 
+const { deleteComment, postComment } = CommentController;
+
 /**
  * @swagger
  *
@@ -34,6 +36,42 @@ const router = express.Router();
  *       '403':
  *         description: User not allowed to comment on this request
  */
-router.post('/requests/:requestId/comment', verifyUser, validation, catchErrors(CommentController.postComment));
+router.post('/requests/:requestId/comment', verifyUser, validation, catchErrors(postComment));
 
+/**
+ * @swagger
+ *
+ * /comments/:commentId/delete:
+ *   delete:
+ *     summary: Delete comment
+ *     description: Set the comment to be invisible from the comments thread
+ *     tags:
+ *       - Comments
+ *     produces:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *               message:
+ *                 type: string
+ *               data:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   comment:
+ *                     type: string
+ *                   isVisible:
+ *                     type: boolean
+ *     responses:
+ *       200:
+ *         description: Successfully deleted
+ *       404:
+ *         description: Comment not found
+ *       403:
+ *         description: Unauthorized user
+ */
+router.patch('/comments/:commentId/delete', verifyUser, catchErrors(deleteComment));
 export default router;
