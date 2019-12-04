@@ -175,6 +175,17 @@ const commentSchema = Joi.object()
     }
   });
 
+const searchRequestsSchema = Joi.object().keys({
+  travelDate: Joi.date(),
+  returnDate: Joi.date(),
+  searchString: Joi.string().strict().trim().required(),
+}).options({
+  abortEarly: false,
+  language: {
+    key: '{{key}} '
+  }
+});
+
 export default {
   '/auth/resetPassword': resetPassword,
   '/auth/signup': signupSchema,
@@ -187,5 +198,6 @@ export default {
   '/trips/:tripId': updateTripSchema,
   '/hotels': hotelSchema,
   '/hotels/:hotelId/rooms': roomSchema,
-  '/booking': bookingSchema
+  '/booking': bookingSchema,
+  '/requests/search': searchRequestsSchema
 };

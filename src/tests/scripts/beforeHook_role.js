@@ -3,9 +3,10 @@ import { request } from 'chai';
 import app from '../../app';
 import db from '../../models';
 import Bcrypt from '../../utils/hash';
+import truncate from './truncate';
 
 const prepareForTest = async () => {
-  await db.user.destroy({ where: {}, force: true });
+  await truncate();
   await db.user.create({
     firstName: 'Super',
     lastName: 'Administrator',

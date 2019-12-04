@@ -1,5 +1,6 @@
 import express from 'express';
 import { verifyUser } from '../../middlewares/checkToken';
+import { validation } from '../../validation/validation';
 import requests from '../../controllers/request.controller';
 import getRequestByStatus from '../../middlewares/queryRequestByStatus';
 import catchErrors from '../../utils/helper';
@@ -332,5 +333,81 @@ router.get(
  *        description: invalid inputs
  */
 router.patch('/request/:id', verifyUser, authorize(['manager']), checkRequestLineManger, catchErrors(requests.approveRequest));
+
+/**
+ * @swagger
+ *
+ * /requests/search:
+ *  post:
+ *    security:
+ *    summary: this gets searched requests from a specific user
+ *    description: Takes the users token
+ *    tags:
+ *      - Requests
+ *    produces:
+ *      application/json:
+ *        properties:
+ *          status:
+ *            type: string
+ *          message:
+ *            type: string
+ *          data:
+ *            type: array
+ *            items:
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: integer
+ *                status:
+ *                  type: string
+ *                userId:
+ *                  type: integer
+ *                type:
+ *                   type: string
+ *                createdAt:
+ *                  type: string
+ *                updatedAt:
+ *                  type: string
+ *                trips:
+ *                  type: array
+ *                  items:
+ *                    type: object
+ *                    properties:
+ *                      id:
+ *                        type: integer
+ *                      userId:
+ *                        type: integer
+ *                      hotelId:
+ *                        type: integer
+ *                      type:
+ *                        type: string
+ *                      leavingFrom:
+ *                        type: string
+ *                      goingTo:
+ *                        type: string
+ *                      travelDate:
+ *                        type: string
+ *                      returnDate:
+ *                        type: string
+ *                      reason:
+ *                        type: string
+ *                      requestId:
+ *                        type: integer
+ *                      createdAt:
+ *                        type: string
+ *                      updatedAt:
+ *                        type: string
+ *    responses:
+ *      200:
+ *        description: successfully retrieved search results
+ *      404:
+ *        description: no matching records found
+ */
+router.post(
+  '/requests/search',
+  verifyUser,
+  validation,
+  catchErrors(requests.searchRequests)
+);
 
 export default router;

@@ -3,13 +3,14 @@ import { use, request, expect } from 'chai';
 import app from '../app';
 import db from '../models';
 import Bcrypt from '../utils/hash';
+import truncate from './scripts/truncate';
 
 use(chaiHttp);
 
 const prefix = '/api/v1';
 describe('/auth/signin', () => {
   before(async () => {
-    await db.user.destroy({ where: {}, force: true });
+    await truncate();
     await db.user.create({
       firstName: 'John',
       lastName: 'McCain',

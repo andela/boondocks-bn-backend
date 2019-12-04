@@ -3,7 +3,8 @@ import {
   getAllRequest,
   getOneRequest,
   updateRequestStatus,
-  getManagerRequest
+  getManagerRequest,
+  getSearchedRequests
 } from '../services/request.service';
 
 /**
@@ -66,6 +67,18 @@ class Requests {
     const request = await getOneRequest(id);
 
     return Responses.handleSuccess(200, `Succesfully ${status} request`, res, request);
+  }
+
+  /**
+   *
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} successful fetched the requests
+   */
+  async searchRequests(req, res) {
+    const currentUser = res.locals.user;
+    const requests = await getSearchedRequests(currentUser.userId, req.body);
+    return Responses.handleSuccess(200, 'successfully retrieved search results', res, requests);
   }
 }
 

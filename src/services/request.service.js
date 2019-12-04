@@ -1,3 +1,5 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable function-paren-newline */
 import db from '../models';
 import ErrorHandler from '../utils/error';
 
@@ -135,6 +137,80 @@ const updateRequestStatus = async (requestId, status) => {
   throw new ErrorHandler('Please set status to "approved" or "declined"', 400);
 };
 
+const getSearchedRequests = async (userId, body) => {
+  let { searchString } = body;
+  let travelDate, returnDate;
+
+  if (Object.prototype.hasOwnProperty.call(body, 'travelDate') === false) {
+    travelDate = new Date('1970-01-01');
+  } else {
+    travelDate = body.travelDate;
+  }
+  if (Object.prototype.hasOwnProperty.call(body, 'returnDate') === false) {
+    returnDate = new Date('9999-12-31');
+  } else {
+    returnDate = body.returnDate;
+  }
+
+  searchString = searchString.toLowerCase();
+  const searchArray = searchString.split(' ');
+  const statusEnums = ['open', 'approved', 'declined'];
+  let enumQueries = [];
+
+  searchArray.forEach((string) => {
+    if (statusEnums.includes(string)) {
+      enumQueries.push(string);
+    }
+  });
+
+  const otherSearchParams = [];
+  searchArray.forEach((string) => {
+    if (statusEnums.includes(string) === false) {
+      otherSearchParams.push(string);
+    }
+  });
+
+  if (enumQueries.length === 0) {
+    enumQueries = ['open', 'approved', 'declined'];
+  }
+
+  let searchRegex = [];
+  let strQuery = `SELECT * FROM requests AS r
+    JOIN trips AS t
+    ON r."id" = t."requestId" 
+    WHERE r."userId"=:userId
+    AND t."travelDate" BETWEEN :tDate AND :rDate
+    AND r."status" IN(:enumQueries)`;
+
+  if (otherSearchParams.length > 0) {
+    otherSearchParams.forEach((searchItem) => {
+      searchRegex.push(searchItem);
+    });
+
+    searchRegex = searchRegex.join('|');
+    searchRegex = `%(${searchRegex})%`;
+
+    strQuery = `${strQuery}
+    AND (
+      lower(t."leavingFrom") SIMILAR TO :searchRegex
+      OR lower(t."goingTo") SIMILAR TO :searchRegex
+    )`;
+  }
+
+  const requests = await db.sequelize.query(
+    strQuery, {
+      replacements: {
+        tDate: travelDate, rDate: returnDate, userId, enumQueries, searchRegex
+      },
+      type: db.sequelize.QueryTypes.SELECT
+    }
+  );
+  if (requests.length === 0) {
+    throw new ErrorHandler('no matching records found', 404);
+  }
+  return requests;
+};
+
 export {
   createRequest,
   getRequestbyStatus,
@@ -143,5 +219,6 @@ export {
   getRequestById,
   getManagerRequest,
   updateRequestStatus,
-  checkUserBelongsToManager
+  checkUserBelongsToManager,
+  getSearchedRequests
 };
