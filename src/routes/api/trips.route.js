@@ -1,7 +1,7 @@
 import express from 'express';
 import trips from '../../controllers/trips.controller';
 import { validation, validateMultiCity } from '../../validation/validation';
-import { checkForRooms, checkForMultiCityRooms } from '../../middlewares/roomsAvailability';
+import { checkForRooms, checkForMultiCityRooms, checkForRoomsOnUpdate } from '../../middlewares/roomsAvailability';
 import { verifyUser } from '../../middlewares/checkToken';
 import catchErrors from '../../utils/helper';
 
@@ -314,6 +314,7 @@ router.patch(
   '/trips/:tripId',
   verifyUser,
   validation,
+  catchErrors(checkForRoomsOnUpdate),
   catchErrors(trips.updateTrip)
 );
 

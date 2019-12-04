@@ -61,37 +61,6 @@ class Trip {
     if (!trip) return null;
     return trip;
   }
-
-  /**
- * Checks if the room is reserved or booked
- * @param {object} rooms
- * @param {object} res
- * @returns {object} res
- */
-  async checkForRoomsOnUpdate(rooms, res) {
-    const { Op } = db.Sequelize;
-
-    const unavailableRooms = await db.room.findAndCountAll({
-      where: {
-        id: {
-          [Op.or]: rooms
-        },
-        status: {
-          [Op.or]: ['reserved', 'booked']
-        },
-      },
-      include: [{
-        model: db.booking,
-        where: {
-          userId: {
-            [Op.ne]: res.locals.user.userId
-          }
-        }
-      }],
-      attributes: ['id']
-    });
-    return unavailableRooms;
-  }
 }
 
 export default new Trip();

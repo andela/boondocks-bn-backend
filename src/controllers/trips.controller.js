@@ -96,9 +96,6 @@ class Trips {
    */
   async updateTrip(req, res) {
     const trip = await tripService.findTripById(req.params.tripId);
-    if (!trip) {
-      return Responses.handleError(404, 'no such trip exists', res);
-    }
     const currentUserId = res.locals.user.userId;
     if (currentUserId !== trip.userId) {
       return Responses.handleError(403, 'you can only edit your own trips', res);
@@ -120,16 +117,6 @@ class Trips {
       // check room availability
       if (key === 'rooms') {
         const { rooms } = req.body;
-        const unAvailableRooms = await tripService.checkForRoomsOnUpdate(rooms, res);
-        if (unAvailableRooms.count > 0) {
-          const bookedRooms = unAvailableRooms.rows.map(room => room.id);
-          return Responses.handleSuccess(
-            409,
-            'room(s) already booked by other requester',
-            res,
-            { unAvailableRoomsIds: bookedRooms }
-          );
-        }
         // recreate booking
         await db.booking.destroy({
           where: {

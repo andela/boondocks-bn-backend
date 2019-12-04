@@ -37,7 +37,7 @@ describe('/PATCH /trips/:tripId', () => {
     const res = await request(app)
       .patch(`${prefix}/trips/${existingTrip.id}`)
       .set('Authorization', randomRequesterToken)
-      .send(updateTripsData.trips[5]);
+      .send(updateTripsData.trips[6]);
     expect(res.status).eql(403);
     expect(res.body.message).eql('you can only edit your own trips');
   });
