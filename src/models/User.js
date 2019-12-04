@@ -111,6 +111,10 @@ module.exports = (sequelize, DataTypes) => {
       targetKey: 'id',
       onDelete: 'CASCADE'
     });
+    User.hasMany(models.conversation, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
   };
   return User;
 };

@@ -1,7 +1,12 @@
 import db from '../../models';
 
 const userfactory = async (data) => {
-  const user = await db.user.create(data);
+  const message = await db.user.create(data);
+  return message;
+};
+
+const messageFactory = async (data) => {
+  const user = await db.conversation.create(data);
   return user;
 };
 
@@ -31,5 +36,6 @@ export {
   roomfactory,
   tripfactory,
   requestfactory,
-  locationfactory
+  locationfactory,
+  messageFactory
 };

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
+    <link href="http://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <title>Barefoot Nomad chat</title>
+  </head>
+
+  <body>
+    <header>
+      <h1>Barefoot Nomad</h1>
+    </header>
+
+    <section id="chatroom">
+      <section id="feedback"></section>
+    </section>
+
+    
+
+    <section id="input_zone"> 
+      <input id="message" class="vertical-align" type="text" />
+      <button id="send_message" class="vertical-align" type="button">Send</button>
+    </section>
+
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+    
+    $(function(){
+  //make connection
+    var url = new URL(window.location.href);
+    var token = url.searchParams.get("token");
+    var socket = io.connect('http://localhost:3000', {query: {token}})
+    //buttons and inputs
+    var message = $("#message")
+    var username = $("#username")
+    var send_message = $("#send_message")
+    var send_username = $("#send_username")
+    var chatroom = $("#chatroom")
+    var feedback = $("#feedback")
+    socket.on("authentication_error", function(error){
+      console.log('Please login and try again');
+    })
+
+    socket.on("custom_error", function(error){
+      console.log(error);
+    })
+    $(window).bind("load", function() {
+      socket.emit('get_messages')
+    });
+    socket.on("getting", (data) => {
+      const { messages } = data
+      messages.forEach(data => {
+        chatroom.append("<p class='message'>" + data.user.firstName + " " + data.user.lastName + ": " + data.message + "</p>")
+      });
+    })
+    //Emit message
+    send_message.click(function(){
+    socket.emit('new_message', {message : message.val()})
+    })
+
+    //Listen on new_message
+    socket.on("new_message", (data) => {
+    feedback.html('');
+    message.val('');
+    chatroom.append("<p class='message'>" + data.username + ": " + data.message + "</p>")
+    })
+
+    //Emit typing
+    message.bind("keypress", () => {
+    socket.emit('typing')
+    })
+
+    //Listen on typing
+    socket.on('typing', (data) => {
+    feedback.html("<p><i>" + data.username + " is typing a message..." + "</i></p>")
+    })
+  });
+
+    </script>
+  </body>
+</html>
