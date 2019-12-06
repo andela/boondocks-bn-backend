@@ -70,6 +70,13 @@ export default {
     hotelId: 1,
     type: 'return',
     rooms: [2]
+  },
+  {
+    leavingFrom: 'Kigali',
+    goingTo: 'Nairobi',
+    travelDate: '2019-11-18',
+    reason: 'visit our agents',
+    type: 'return',
   }],
   multiCityTrips: [{
     leavingFrom: 'Kigali',
@@ -128,6 +135,15 @@ export default {
   {
     id: 5,
     hotelId: 1,
+    name: 'Muhabura',
+    type: 'return',
+    description: 'The best room ever',
+    image: 'room.png',
+    cost: 5000,
+    status: 'available'
+  },
+  {
+    id: 6,
     name: 'Muhabura',
     type: 'return',
     description: 'The best room ever',

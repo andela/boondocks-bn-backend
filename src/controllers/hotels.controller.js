@@ -4,6 +4,7 @@ import filesService from '../services/files.service';
 import Responses from '../utils/response';
 import roomService from '../services/room.service';
 import { getAllRequestsHotels } from '../services/request.service';
+import addFeeback from '../services/feedback.service';
 
 /**
  * Class for accomodation facilities
@@ -263,6 +264,21 @@ class Hotel {
       'Most travelled destinations listed successfully',
       res, { results },
     );
+  }
+
+
+  /**
+   * Creates a new feedback.
+   * @param {object} req request
+   * @param {object} res response
+   * @returns {object} response object
+   */
+  async addedFeedback(req, res) {
+    const { feedback } = req.body;
+    const { userId } = res.locals.user;
+    const { hotelId } = req.params;
+    const addedFeedback = await addFeeback({ userId, hotelId, feedback });
+    return Responses.handleSuccess(201, 'Feedback posted successfully', res, addedFeedback);
   }
 }
 

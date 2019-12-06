@@ -11,7 +11,7 @@ const messageFactory = async (data) => {
 };
 
 const hotelfactory = async (data) => {
-  const hotel = await db.hotel.create(data);
+  const hotel = db.hotel.create(data);
   return hotel;
 };
 

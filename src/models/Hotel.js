@@ -10,16 +10,20 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Hotel.associate = (models) => {
     Hotel.hasMany(models.booking, {
-      foreignkey: 'hotelId',
-      onDelete: 'CASCADE'
+      foreignKey: 'hotelId',
+      onDelete: 'CASCADE',
     });
     Hotel.hasMany(models.trip, {
-      foreignkey: 'hotelId',
-      onDelete: 'CASCADE'
+      foreignKey: 'hotelId',
+      onDelete: 'CASCADE',
     });
     Hotel.belongsTo(models.location, {
-      foreignkey: 'locationId',
-      onDelete: 'CASCADE'
+      foreignKey: 'locationId',
+      onDelete: 'CASCADE',
+    });
+    Hotel.hasMany(models.feedback, {
+      foreignKey: 'hotelId',
+      onDelete: 'CASCADE',
     });
 
     Hotel.hasMany(models.like, {

@@ -101,15 +101,19 @@ module.exports = (sequelize, DataTypes) => {
     });
     User.hasMany(models.request, {
       foreignKey: 'userId',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
     });
     User.hasMany(models.comment, {
       foreignKey: 'userId',
     });
     User.hasMany(models.notification, {
-      foreignkey: 'userId',
+      foreignKey: 'userId',
       targetKey: 'id',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+    });
+    User.hasMany(models.feedback, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE',
     });
     User.hasMany(models.conversation, {
       foreignKey: 'userId',

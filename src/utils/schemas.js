@@ -166,13 +166,26 @@ const commentSchema = Joi.object()
   .keys({
     comment: Joi.string()
       .strict()
-      .required()
+      .required(),
   })
   .options({
     abortEarly: false,
     language: {
-      key: '{{key}} '
-    }
+      key: '{{key}} ',
+    },
+  });
+
+const feedbackSchema = Joi.object()
+  .keys({
+    feedback: Joi.string()
+      .strict()
+      .required(),
+  })
+  .options({
+    abortEarly: false,
+    language: {
+      key: '{{key}} ',
+    },
   });
 
 const searchRequestsSchema = Joi.object().keys({
@@ -212,5 +225,6 @@ export default {
   '/hotels/:hotelId/rooms': roomSchema,
   '/booking': bookingSchema,
   '/requests/search': searchRequestsSchema,
-  '/trips/stats': tripsStatsSchema
+  '/trips/stats': tripsStatsSchema,
+  '/hotels/:hotelId/feedback': feedbackSchema
 };

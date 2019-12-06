@@ -413,6 +413,43 @@ router.get(
   verifyUser,
   catchErrors(hotels.getAllHotels)
 );
+
+
+/**
+ * @swagger
+ *
+ * /api/v1/hotels/:hotelId/feedback:
+ *   post:
+ *     tags:
+ *       - Feedback
+ *     summary: Make a Feedback
+ *     description: Allows a user to make a feedback on accommodation
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: params
+ *         name: hotelId
+ *       - in: body
+ *         name: feedback
+ *         schema:
+ *           type: object
+ *           properties:
+ *             feedback:
+ *               type: string
+ *               example: I liked the service in this hotel...
+ *     responses:
+ *       '201':
+ *         description: Comment posted successfully
+ *       '404':
+ *         description: Hotel doesn't exist
+ */
+router.post(
+  '/hotels/:hotelId/feedback',
+  verifyUser,
+  validation,
+  catchErrors(hotels.addedFeedback)
+);
+
 export default router;
 
 /**
