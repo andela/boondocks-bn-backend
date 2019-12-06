@@ -332,7 +332,7 @@ router.get(
  *      400:
  *        description: invalid inputs
  */
-router.patch('/request/:id', verifyUser, authorize(['manager']), checkRequestLineManger, catchErrors(requests.approveRequest));
+router.patch('/request/:id', verifyUser, authorize(['manager']), catchErrors(checkRequestLineManger), catchErrors(requests.approveRequest));
 
 /**
  * @swagger

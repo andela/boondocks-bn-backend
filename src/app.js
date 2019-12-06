@@ -78,7 +78,7 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => Responses.handleSuccess(200, 'Welcome to Barefoot Nomad', res));
 
 app.use(router);
-app.use((req, res) => Responses.handleError(404, 'Not found', res));
+app.use((req, res) => Responses.handleError(404, 'Route not found', res));
 // development error handler middleware
 app.use((err, req, res, next) => {
   if (isDevelopment !== 'development') {

@@ -17,7 +17,7 @@
     "test": "NODE_ENV=test nyc mocha -r dotenv/config  --require @babel/register \"./src/tests/**/*.js\"   --timeout 150000 --exit",
     "pretest-travis": "NODE_ENV=test npm run migrate:undo && NODE_ENV=test  npm run migrate",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "start": "node -r dotenv/config dist/index.js",
+    "start": "node -r dotenv/config dist/app.js",
     "migrate": "babel-node ./src/scripts/migrate",
     "db:seed": "babel-node ./src/scripts/seed",
     "db:seed:undo": "babel-node ./src/scripts/seed-rollback",

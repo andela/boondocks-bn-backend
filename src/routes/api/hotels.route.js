@@ -290,7 +290,7 @@ router.patch(
 /**
  * @swagger
  *
- * /hotels/:hotelId:
+ * /hotel/:hotelId:
  *  get:
  *    summary: Gets hotel by ID
  *    description: Retrieves hotel, rooms dislikes, and its likes
@@ -418,7 +418,7 @@ router.get(
 /**
  * @swagger
  *
- * /api/v1/hotels/:hotelId/feedback:
+ * /hotels/:hotelId/feedback:
  *   post:
  *     tags:
  *       - Feedback
@@ -450,8 +450,6 @@ router.post(
   catchErrors(hotels.addedFeedback)
 );
 
-export default router;
-
 /**
  * @swagger
  *
@@ -474,3 +472,5 @@ router.get(
   verifyUser,
   catchErrors(hotels.getMostVisitedDestination),
 );
+
+export default router;

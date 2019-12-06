@@ -152,7 +152,7 @@ router.post('/trips/oneway', verifyUser, validation, checkForRooms, catchErrors(
  *       401:
  *         description: unauthorized
  */
-router.post('/trips/return', verifyUser, validation, checkForRooms, catchErrors(trips.createTrip));
+router.post('/trips/return', verifyUser, validation, catchErrors(checkForRooms), catchErrors(trips.createTrip));
 
 /**
  * @swagger
@@ -234,7 +234,7 @@ router.post('/trips/return', verifyUser, validation, checkForRooms, catchErrors(
  *       400:
  *         description: Validation error
  */
-router.post('/trips/multi-city', verifyUser, validateMultiCity, checkForMultiCityRooms, catchErrors(trips.createMultiCitiesTrip));
+router.post('/trips/multi-city', verifyUser, validateMultiCity, catchErrors(checkForMultiCityRooms), catchErrors(trips.createMultiCitiesTrip));
 
 /**
  * @swagger

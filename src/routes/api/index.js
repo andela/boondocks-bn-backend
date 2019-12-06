@@ -25,7 +25,7 @@ router.use('/api/docs', setup(specs, {
 
 router.use(prefix, usersRouter);
 router.use(prefix, rolesRouter);
-router.use(`${prefix}/auth`, authRouter);
+router.use(prefix, authRouter);
 router.use(prefix, tripsRouter);
 router.use(prefix, requestRouter);
 router.use(prefix, commentsRouter);

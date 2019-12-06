@@ -67,7 +67,7 @@ router.post(
   '/booking',
   verifyUser,
   validation,
-  checkForRooms,
+  catchErrors(checkForRooms),
   catchErrors(bookings.book)
 );
 
