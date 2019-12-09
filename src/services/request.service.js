@@ -271,6 +271,36 @@ const getUserTripsStats = async ({ user, fromDate, req }) => {
   return requests;
 };
 
+const getAllRequestsHotels = async () => {
+  const { trip, hotel, request, } = db;
+
+  const requests = await request.findAll({
+    where: {
+      status: 'approved',
+    },
+    include: [
+      {
+        model: trip,
+        as: 'trips',
+        where: {
+          travelDate: {
+            [Op.lt]: (new Date()).toISOString().split('T')[0],
+          },
+        },
+        include: [
+          {
+            model: hotel,
+            as: 'hotel',
+          },
+        ],
+      },
+    ],
+    attributes: [],
+  });
+
+  return requests;
+};
+
 export {
   createRequest,
   getRequestbyStatus,
@@ -282,4 +312,5 @@ export {
   checkUserBelongsToManager,
   getSearchedRequests,
   getUserTripsStats,
+  getAllRequestsHotels
 };

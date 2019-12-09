@@ -11,23 +11,28 @@ const messageFactory = async (data) => {
 };
 
 const hotelfactory = async (data) => {
-  await db.hotel.create(data);
+  const hotel = await db.hotel.create(data);
+  return hotel;
 };
 
 const roomfactory = async (data) => {
-  await db.room.create(data);
+  const room = await db.room.create(data);
+  return room;
 };
 
 const tripfactory = async (data) => {
-  await db.room.create(data);
+  const trip = await db.room.create(data);
+  return trip;
 };
 
 const locationfactory = async (data) => {
-  await db.location.create(data);
+  const location = await db.location.create(data);
+  return location;
 };
 
 const requestfactory = async (data) => {
-  await db.request.create(data);
+  const request = await db.request.create(data);
+  return request;
 };
 
 const likesfactory = async (data) => {

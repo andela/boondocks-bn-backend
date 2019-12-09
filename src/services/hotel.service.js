@@ -190,6 +190,25 @@ class HotelService {
 
     return hotels;
   }
+
+  /**
+   * Get most travelled destinations
+   * @param {Array} arr
+   * @returns {Array} hotels
+   */
+  async mostTravelled(arr) {
+    const { hotel } = db;
+    const { Op } = Sequelize;
+    const mostTravelled = await hotel.findAll({
+      where: {
+        id: {
+          [Op.in]: arr,
+        },
+      },
+    });
+
+    return mostTravelled;
+  }
 }
 
 export default new HotelService();

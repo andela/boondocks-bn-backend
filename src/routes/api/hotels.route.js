@@ -7,7 +7,6 @@ import authorize from '../../middlewares/roleAuthorization';
 import { verifyUser } from '../../middlewares/checkToken';
 import checkHotel from '../../middlewares/checkHotel';
 
-
 const router = express.Router();
 
 /**
@@ -151,7 +150,7 @@ router.post(
   authorize(['travel_administrator', 'super_administrator']),
   fileService.upload('image'),
   validation,
-  catchErrors(hotels.addRoom)
+  catchErrors(hotels.addRoom),
 );
 
 /**
@@ -415,3 +414,26 @@ router.get(
   catchErrors(hotels.getAllHotels)
 );
 export default router;
+
+/**
+ * @swagger
+ *
+ * /api/v1/hotels/most-travelled:
+ *   post:
+ *     tags:
+ *       - Hotels
+ *     summary: Get the most visited Hotel
+ *     description: Allow user to get the most travelled destination
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       '200':
+ *         description: Successfully retrieved the most travelled destination
+ *       '404':
+ *         description: Trips not found
+ */
+router.get(
+  '/hotels/most-travelled',
+  verifyUser,
+  catchErrors(hotels.getMostVisitedDestination),
+);
