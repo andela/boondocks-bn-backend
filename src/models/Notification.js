@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         isIn: {
-          args: [['new_request', 'request_approved', 'new_comment']],
+          args: [['new_request', 'request_approved_or_rejected', 'edited_request', 'new_comment']],
           msg: 'Invalid value',
         },
       },

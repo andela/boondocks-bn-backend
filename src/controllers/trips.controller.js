@@ -118,7 +118,14 @@ class Trip {
       });
       await mail.newTravelNotification();
     }
-
+    const { lineManager } = currentUser;
+    const notification = await NotificationService.createNotification({
+      requestId,
+      messages: 'New Travel Requested',
+      type: 'new_request',
+      userId: lineManager,
+    });
+    NotificationUtil.echoNotification(req, notification, 'new_request', lineManager);
     return Responses.handleSuccess(201, 'created', res, request);
   }
 
@@ -130,8 +137,8 @@ class Trip {
    */
   async updateTrip(req, res) {
     const trip = await tripService.findTripById(req.params.tripId);
-    const currentUserId = res.locals.user.userId;
-    if (currentUserId !== trip.userId) {
+    const currentUser = res.locals.user;
+    if (currentUser.userId !== trip.userId) {
       return Responses.handleError(403, 'you can only edit your own trips', res);
     }
     const tripRequest = await getRequestById(trip.requestId);
@@ -154,13 +161,13 @@ class Trip {
         // recreate booking
         await db.booking.destroy({
           where: {
-            userId: currentUserId,
+            userId: currentUser.userId,
             tripId: trip.id
           }
         });
         rooms.forEach(async (room) => {
           await db.booking.create({
-            userId: currentUserId,
+            userId: currentUser.userId,
             hotelId: req.body.hotelId,
             roomId: room,
             tripId: trip.id
@@ -174,6 +181,14 @@ class Trip {
       }
     });
     await trip.save();
+    const { lineManager } = currentUser;
+    const notification = await NotificationService.createNotification({
+      requestId: trip.requestId,
+      messages: 'Open request edited',
+      type: 'edited_request',
+      userId: lineManager,
+    });
+    NotificationUtil.echoNotification(req, notification, 'edited_request', lineManager);
     return Responses.handleSuccess(201, 'trip details updated successfully', res, trip);
   }
 }

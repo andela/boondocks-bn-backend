@@ -6,6 +6,8 @@ import {
   getManagerRequest,
   getSearchedRequests
 } from '../services/request.service';
+import NotificationService from '../services/notification.service';
+import NotificationUtil from '../utils/notification.util';
 
 /**
  * Class requests
@@ -65,6 +67,13 @@ class Requests {
     await updateRequestStatus(id, status);
 
     const request = await getOneRequest(id);
+    const notification = await NotificationService.createNotification({
+      requestId: request.id,
+      messages: `Your request has been ${status}`,
+      type: 'request_approved_or_rejected',
+      userId: request.userId,
+    });
+    NotificationUtil.echoNotification(req, notification, 'request_approved_or_rejected', request.userId);
 
     return Responses.handleSuccess(200, `Succesfully ${status} request`, res, request);
   }

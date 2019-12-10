@@ -115,7 +115,7 @@ describe('/Requests', () => {
 
   describe('Requests not found', () => {
     beforeEach(async () => {
-      truncate();
+      await truncate();
       await userfactory({
         firstName: 'John',
         lastName: 'McCain',
