@@ -34,11 +34,18 @@ class CommentService {
     }
 
     // eslint-disable-next-line no-return-await
-    return await db.comment.create({
+    const rawComments = await db.comment.create({
       userId,
       comment,
       requestId
     });
+
+    const checkUserNotified = userId === lineManagerId ? request.userId : lineManagerId;
+    const comments = rawComments.get({ plain: true });
+    return {
+      ...comments,
+      user: checkUserNotified
+    };
   }
 
   /**

@@ -1,5 +1,7 @@
 import Responses from '../utils/response';
 import CommentService from '../services/Comment.service';
+import NotificationService from '../services/notification.service';
+import NotificationUtil from '../utils/notification.util';
 
 const { postRequestComment, deleteCommentById } = CommentService;
 
@@ -21,7 +23,15 @@ class CommentsController {
 
     const commentData = await postRequestComment(userId, requestId, comment);
 
-    Responses.handleSuccess(201, 'Comment posted successfully', res, commentData.dataValues);
+    const notification = await NotificationService.createNotification({
+      requestId,
+      messages: 'New comment posted on your request',
+      type: 'new_comment',
+      userId: commentData.user,
+    });
+    NotificationUtil.echoNotification(req, notification, 'new_comment', commentData.user);
+
+    Responses.handleSuccess(201, 'Comment posted successfully', res, commentData);
   }
 
   /**

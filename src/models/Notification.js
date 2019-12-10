@@ -1,21 +1,30 @@
 module.exports = (sequelize, DataTypes) => {
   const Notification = sequelize.define('notification', {
-    modelName: DataTypes.STRING,
+    userId: DataTypes.INTEGER,
     type: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         isIn: {
-          args: [['new_request', 'request_approved']],
+          args: [['new_request', 'request_approved', 'new_comment']],
           msg: 'Invalid value',
         },
       },
     },
-    isRead: DataTypes.BOOLEAN
+    messages: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    isRead: DataTypes.BOOLEAN,
+    requestId: DataTypes.INTEGER
   }, {});
   Notification.associate = (models) => {
     Notification.belongsTo(models.user, {
       foreignKey: 'userId',
+      targetKey: 'id',
+    });
+    Notification.belongsTo(models.request, {
+      foreignKey: 'requestId',
       targetKey: 'id',
     });
   };

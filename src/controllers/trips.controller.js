@@ -33,6 +33,7 @@ class Trip {
 
     const requestId = await createRequest(currentUser.userId, 'single');
 
+
     tripService.create({
       hotelId,
       type,
@@ -60,7 +61,8 @@ class Trip {
 
     const { lineManager } = currentUser;
     const notification = await NotificationService.createNotification({
-      modelName: 'Request',
+      requestId,
+      messages: 'New Travel Requested',
       type: 'new_request',
       userId: lineManager,
     });
@@ -88,7 +90,6 @@ class Trip {
         leavingFrom,
         goingTo,
         travelDate,
-        returnDate,
         reason,
         rooms
       } = travel;
@@ -99,7 +100,6 @@ class Trip {
         leavingFrom,
         goingTo,
         travelDate,
-        returnDate,
         reason,
         rooms,
         requestId,
