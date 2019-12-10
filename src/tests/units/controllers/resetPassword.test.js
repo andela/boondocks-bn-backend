@@ -64,6 +64,7 @@ describe('Unit tests for reset password controller', () => {
 
   describe('reset and Update password unit tests', () => {
     beforeEach(async () => {
+      await db.like.destroy({ where: {}, force: true });
       await truncate();
       await db.user.create(userData.user);
     });

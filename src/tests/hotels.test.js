@@ -6,7 +6,7 @@ import app from '../app';
 import db from '../models';
 import Hash from '../utils/hash';
 import tokenizer from '../utils/jwt';
-import { hotelfactory, locationfactory } from './scripts/factories';
+import { hotelfactory, locationfactory, likesfactory } from './scripts/factories';
 import truncate from './scripts/truncate';
 
 should();
@@ -52,9 +52,27 @@ describe('/hotels', () => {
       country: 'Rwanda',
       city: 'kigali'
     });
+    await locationfactory({
+      id: 81,
+      country: 'Kenya',
+      city: 'Nairobi'
+    });
 
     await hotelfactory({
       id: 82,
+      locationId: 81,
+      name: 'Test hotel',
+      image: '',
+      street: 'kk 127',
+      description: 'best ever hotel',
+      services: 'service 1, service 2',
+      userId: 1
+    });
+
+    await likesfactory({ userId: 1, hotelId: 82, unliked: 1 });
+
+    await hotelfactory({
+      id: 83,
       locationId: 80,
       name: 'Test hotel',
       image: '',
@@ -63,6 +81,8 @@ describe('/hotels', () => {
       services: 'service 1, service 2',
       userId: 1
     });
+
+    await likesfactory({ userId: 1, hotelId: 83, liked: 1 });
 
     token = await tokenizer.signToken({
       id: 1,
@@ -211,6 +231,88 @@ describe('/hotels', () => {
       .field('country', 'Rwanda')
       .end((err, res) => {
         res.status.should.be.eql(409);
+        done();
+      });
+  });
+
+  it('PATCH hotels/:hotelId/like - user should be able to like a hotel', (done) => {
+    request(app)
+      .patch(`${prefix}/hotels/82/like`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        res.status.should.be.eql(200);
+        const { data } = res.body;
+        expect(data.likesCount).to.eql('1');
+        done();
+      });
+  });
+
+  it('GET /hotels - should be retrieve hotels with likes', (done) => {
+    request(app)
+      .get(`${prefix}/hotels`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        res.status.should.be.eql(200);
+        const { data } = res.body;
+        expect(data[0].likesCount).to.eql('1');
+        done();
+      });
+  });
+
+  it('GET /hotels/:hotelId - should be retrieve a hotel with likes and rooms', (done) => {
+    request(app)
+      .get(`${prefix}/hotel/82`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        res.status.should.be.eql(200);
+        const { data } = res.body;
+        expect(data.likesCount).to.eql('1');
+        done();
+      });
+  });
+
+  it('PATCH hotels/:hotelId/like - user should be able to undo like', (done) => {
+    request(app)
+      .patch(`${prefix}/hotels/82/like`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        res.status.should.be.eql(200);
+        const { data } = res.body;
+        expect(data.likesCount).to.eql('0');
+        done();
+      });
+  });
+
+  it('PATCH hotels/:hotelId/like - user should not be able to like a hotel which doesn\'t exist', (done) => {
+    request(app)
+      .patch(`${prefix}/hotels/84/like`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        res.status.should.be.eql(400);
+        done();
+      });
+  });
+
+  it('PATCH hotels/:hotelId/unlike - user should be able to unlike a hotel', (done) => {
+    request(app)
+      .patch(`${prefix}/hotels/83/unlike`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        res.status.should.be.eql(200);
+        const { data } = res.body;
+        expect(data.unLikesCount).to.eql('1');
+        done();
+      });
+  });
+
+  it('PATCH hotels/:hotelId/unlike - user should be able to undo unlike', (done) => {
+    request(app)
+      .patch(`${prefix}/hotels/83/unlike`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        res.status.should.be.eql(200);
+        const { data } = res.body;
+        expect(data.unLikesCount).to.eql('0');
         done();
       });
   });

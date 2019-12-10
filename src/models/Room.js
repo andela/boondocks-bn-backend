@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignkey: 'roomId',
       onDelete: 'CASCADE'
     });
+
+    Room.belongsTo(models.hotel, {
+      foreignkey: 'hotelId',
+      onDelete: 'CASCADE'
+    });
   };
   return Room;
 };

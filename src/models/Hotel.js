@@ -21,6 +21,16 @@ module.exports = (sequelize, DataTypes) => {
       foreignkey: 'locationId',
       onDelete: 'CASCADE'
     });
+
+    Hotel.hasMany(models.like, {
+      foreignkey: 'hotelId',
+      onDelete: 'CASCADE'
+    });
+
+    Hotel.hasMany(models.room, {
+      foreignkey: 'hotelId',
+      onDelete: 'CASCADE'
+    });
   };
   return Hotel;
 };

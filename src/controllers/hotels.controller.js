@@ -105,6 +105,108 @@ class Hotel {
 
     return Responses.handleSuccess(201, 'Room added successfully', res, room);
   }
+
+  /**
+   * Get all the hotels with likes
+   * @param {*} req
+   * @param {*} res
+   * @returns {Object} All hotels
+   */
+  async getAllHotels(req, res) {
+    const { userId } = res.locals.user;
+    const hotels = await hotelService.getHotels(userId);
+    return Responses.handleSuccess(200, 'Hotels retrieved successfully', res, hotels);
+  }
+
+  /**
+   * Get hotel with likes and rooms
+   * @param {*} req
+   * @param {*} res
+   * @returns {Object} hotel
+   */
+  async getHotel(req, res) {
+    const { hotelId } = req.params;
+    const { userId } = res.locals.user;
+    const hotel = await hotelService.getHotelById(hotelId, userId);
+    return Responses.handleSuccess(200, 'hotel retrieved successfully', res, hotel);
+  }
+
+  /**
+   * like or undo like on accommodation
+   * @param {*} req
+   * @param {*} res
+   * @returns {Object} response
+   */
+  async like(req, res) {
+    const LIKED = 1;
+    const NEUTRAL = 0;
+
+    const { hotelId } = req.params;
+    const { userId } = res.locals.user;
+
+    const hasLiked = await hotelService.hasLiked(hotelId, userId);
+
+    let action;
+    switch (hasLiked) {
+      case LIKED:
+        action = 'Undo like';
+        await hotelService.setLikeStatus(hotelId, userId, NEUTRAL);
+        break;
+      case NEUTRAL:
+        action = 'Like';
+        await hotelService.setLikeStatus(hotelId, userId, LIKED);
+        break;
+    }
+
+    const hasUnLiked = await hotelService.hasUnLiked(hotelId, userId);
+
+    if (hasUnLiked) {
+      await hotelService.setUnLikeStatus(hotelId, userId, NEUTRAL);
+    }
+
+    const hotel = await hotelService.getHotelById(hotelId, userId);
+
+    return Responses.handleSuccess(200, `${action} successful`, res, hotel);
+  }
+
+  /**
+   * unlike or undo unlike on accommodation
+   * @param {*} req
+   * @param {*} res
+   * @returns {Object} response
+   */
+  async unLike(req, res) {
+    const UN_LIKED = 1;
+    const NEUTRAL = 0;
+
+    const { hotelId } = req.params;
+    const { userId } = res.locals.user;
+
+    const hasUnLiked = await hotelService.hasUnLiked(hotelId, userId);
+
+    let action;
+
+    switch (hasUnLiked) {
+      case UN_LIKED:
+        action = 'Undo unlike';
+        await hotelService.setUnLikeStatus(hotelId, userId, NEUTRAL);
+        break;
+      case NEUTRAL:
+        action = 'Unlike';
+        await hotelService.setUnLikeStatus(hotelId, userId, UN_LIKED);
+        break;
+    }
+
+    const hasLiked = await hotelService.hasLiked(hotelId, userId);
+
+    if (hasLiked) {
+      await hotelService.setLikeStatus(hotelId, userId, NEUTRAL);
+    }
+
+    const hotel = await hotelService.getHotelById(hotelId, userId);
+
+    return Responses.handleSuccess(200, `${action} successful`, res, hotel);
+  }
 }
 
 export default new Hotel();
