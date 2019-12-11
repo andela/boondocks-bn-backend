@@ -211,6 +211,32 @@ const tripsStatsSchema = Joi.object()
     }
   });
 
+const rateSchema = Joi.object()
+  .keys({
+    rating: Joi.number().integer().min(1).max(5)
+      .strict()
+      .required()
+  })
+  .options({
+    abortEarly: false,
+    language: {
+      key: '{{key}} '
+    }
+  });
+
+const updateRatingSchema = Joi.object()
+  .keys({
+    rating: Joi.number().integer().min(1).max(5)
+      .strict()
+      .required()
+  })
+  .options({
+    abortEarly: false,
+    language: {
+      key: '{{key}} '
+    }
+  });
+
 export default {
   '/auth/resetPassword': resetPassword,
   '/auth/signup': signupSchema,
@@ -226,5 +252,7 @@ export default {
   '/booking': bookingSchema,
   '/requests/search': searchRequestsSchema,
   '/trips/stats': tripsStatsSchema,
-  '/hotels/:hotelId/feedback': feedbackSchema
+  '/hotels/:hotelId/feedback': feedbackSchema,
+  '/hotels/:hotelId/rating': rateSchema,
+  '/rating/:ratingId': updateRatingSchema
 };

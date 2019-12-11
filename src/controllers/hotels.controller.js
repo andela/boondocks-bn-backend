@@ -116,8 +116,7 @@ class Hotel {
    * @returns {Object} All hotels
    */
   async getAllHotels(req, res) {
-    const { userId } = res.locals.user;
-    const hotels = await hotelService.getHotels(userId);
+    const hotels = await hotelService.getHotels();
     return Responses.handleSuccess(200, 'Hotels retrieved successfully', res, hotels);
   }
 

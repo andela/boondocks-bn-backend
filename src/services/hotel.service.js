@@ -55,11 +55,15 @@ class HotelService {
       ],
       include: [{
         model: db.like,
-        where: { userId },
         attributes: ['userId', 'liked', 'unliked']
       },
       { model: db.location },
-      { model: db.room }
+      { model: db.room },
+      {
+        model: db.rating,
+        where: { userId },
+        required: false
+      }
       ],
     });
 
@@ -153,7 +157,7 @@ class HotelService {
    * @param {Number} userId
    * @returns {Object} all hotels
    */
-  async getHotels(userId) {
+  async getHotels() {
     const LIKED = 1;
     const UN_LIKED = 1;
     const hotels = await db.hotel.findAll({
@@ -164,6 +168,7 @@ class HotelService {
         'description',
         'street',
         'services',
+        'average_rating',
         'createdAt',
         [Sequelize.literal(`(
             SELECT COUNT(*) FROM likes 
@@ -181,7 +186,6 @@ class HotelService {
       include: [
         {
           model: db.like,
-          where: { userId },
           attributes: ['userId', 'liked', 'unliked']
         },
         { model: db.location }

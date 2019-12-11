@@ -6,6 +6,8 @@ import { validation } from '../../validation/validation';
 import authorize from '../../middlewares/roleAuthorization';
 import { verifyUser } from '../../middlewares/checkToken';
 import checkHotel from '../../middlewares/checkHotel';
+import { checkIsEmailVerified, checkHasStayedAtHotel } from '../../middlewares/checkRateHotel';
+import ratings from '../../controllers/ratings.controller';
 
 const router = express.Router();
 
@@ -471,6 +473,156 @@ router.get(
   '/hotels/most-travelled',
   verifyUser,
   catchErrors(hotels.getMostVisitedDestination),
+);
+
+
+/**
+ * @swagger
+ *
+ * /hotels/:hotelId/rating:
+ *   post:
+ *     summary: Rate a hotel
+ *     description: This allows users to post a rating on a hotel they stayed at
+ *     tags:
+ *       - Accommodation
+  *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               rating:
+ *                 type: integer
+ *     produces:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *               message:
+ *                 type: string
+ *               data:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   hotelId:
+ *                     type: string
+ *                   userId:
+ *                     type: string
+ *                   rating:
+ *                     type: string
+ *                   createdAt:
+ *                     type: string
+ *                   updatedAt:
+ *                     type: string
+ *     responses:
+ *       201:
+ *         description: Hotel rated successfully
+ */
+router.post(
+  '/hotels/:hotelId/rating',
+  verifyUser,
+  checkIsEmailVerified,
+  catchErrors(checkHasStayedAtHotel),
+  validation,
+  catchErrors(ratings.rateHotel)
+);
+
+/**
+ * @swagger
+ *
+ * /rating/:ratingId:
+ *   patch:
+ *     summary: Update hotel rating
+ *     description: This allows users to update a rating they posted on a hotel
+ *     tags:
+ *       - Accommodation
+  *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               rating:
+ *                 type: integer
+ *     produces:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *               message:
+ *                 type: string
+ *               data:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   hotelId:
+ *                     type: string
+ *                   userId:
+ *                     type: string
+ *                   rating:
+ *                     type: string
+ *                   createdAt:
+ *                     type: string
+ *                   updatedAt:
+ *                     type: string
+ *     responses:
+ *       201:
+ *         description: Hotel rating updated successfully
+ */
+router.patch(
+  '/rating/:ratingId',
+  verifyUser,
+  validation,
+  catchErrors(ratings.changeHotelRating)
+);
+
+/**
+ * @swagger
+ *
+ * /rating/:ratingId:
+ *   get:
+ *     summary: Get a user's hotel rating
+ *     description: This allows fetch a rating they posted on a hotel
+ *     tags:
+ *       - Accommodation
+ *     produces:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *               message:
+ *                 type: string
+ *               data:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   hotelId:
+ *                     type: string
+ *                   userId:
+ *                     type: string
+ *                   rating:
+ *                     type: string
+ *                   createdAt:
+ *                     type: string
+ *                   updatedAt:
+ *                     type: string
+ *     responses:
+ *       201:
+ *         description: Hotel rating fetched successfully
+ */
+router.get(
+  '/rating/:ratingId',
+  verifyUser,
+  catchErrors(ratings.fetchHotelRating)
 );
 
 export default router;

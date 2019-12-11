@@ -7,5 +7,5 @@ module.exports = {
     updatedAt: '2019-12-02'
   }], {}),
 
-  down: queryInterface => queryInterface.bulkDelete('booking', null, {})
+  down: queryInterface => queryInterface.bulkDelete('bookings', null, {})
 };

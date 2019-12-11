@@ -6,7 +6,12 @@ module.exports = (sequelize, DataTypes) => {
     street: DataTypes.STRING,
     description: DataTypes.STRING,
     services: DataTypes.STRING,
-    userId: DataTypes.INTEGER
+    userId: DataTypes.INTEGER,
+    average_rating: {
+      type: DataTypes.NUMERIC(3, 2),
+      defaultValue: 0.00,
+      allowNull: false
+    }
   }, {});
   Hotel.associate = (models) => {
     Hotel.hasMany(models.booking, {
@@ -32,6 +37,11 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Hotel.hasMany(models.room, {
+      foreignkey: 'hotelId',
+      onDelete: 'CASCADE'
+    });
+
+    Hotel.hasMany(models.rating, {
       foreignkey: 'hotelId',
       onDelete: 'CASCADE'
     });
