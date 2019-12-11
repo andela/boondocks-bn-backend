@@ -86,7 +86,7 @@ const twoWaySchema = Joi.object().keys({
   leavingFrom: Joi.string().strict().trim().required(),
   goingTo: Joi.string().strict().required(),
   travelDate: Joi.date().required(),
-  returnDate: Joi.date().required(),
+  returnDate: Joi.date().greater(Joi.ref('travelDate')).required(),
   reason: Joi.string().strict().required(),
   rooms: Joi.required()
 }).options({

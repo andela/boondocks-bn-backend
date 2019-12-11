@@ -44,6 +44,17 @@ class NotificatificationController {
     const allNotification = await NotificationService.getAllNotification(userId);
     return Responses.handleSuccess(200, 'Notifications fetched successfully', res, allNotification);
   }
+
+  /**
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} responses
+   */
+  async markAllAsRead(req, res) {
+    const { userId } = res.locals.user;
+    await NotificationService.markAllAsRead(userId);
+    return Responses.handleSuccess(200, 'All notifications marked as read', res);
+  }
 }
 
 export default new NotificatificationController();
