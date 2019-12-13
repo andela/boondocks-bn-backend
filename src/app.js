@@ -82,7 +82,7 @@ app.use((req, res) => Responses.handleError(404, 'Route not found', res));
 // development error handler middleware
 app.use((err, req, res, next) => {
   if (isDevelopment !== 'development') {
-    return next(err);
+    next(err);
   }
   logger.error(`${err.statusCode || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${
     req.ip
