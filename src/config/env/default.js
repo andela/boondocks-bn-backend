@@ -28,6 +28,10 @@ const config = {
   debug: false,
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   FRONTEND_URL: process.env.FRONTEND_URL,
+  twilioConfig: {
+    TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
+    TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
+    TWILIO_PHONENUMBER: process.env.TWILIO_PHONENUMBER },
   env: process.env.NODE_ENV || 'development'
 };
 
