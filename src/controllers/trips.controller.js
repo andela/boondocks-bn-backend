@@ -4,7 +4,6 @@ import {
   getRequestById,
   getUserTripsStats,
 } from '../services/request.service';
-// import getUserById from '../services/User.service';
 import tripService from '../services/Trip.service';
 import db from '../models';
 import Mailer from '../services/Mailer.services';
@@ -12,6 +11,7 @@ import JWTHelper from '../utils/jwt';
 import NotificationService from '../services/notification.service';
 import NotificationUtil from '../utils/notification.util';
 import UserService from '../services/User.service';
+import bookingService from '../services/booking.service';
 
 /**
  * Class for Trips
@@ -83,7 +83,9 @@ class Trip {
     });
 
     NotificationUtil.echoNotification(req, notification, 'new_request', lineManager);
-    return Responses.handleSuccess(201, 'created', res, request);
+    const bookingDetails = await bookingService.getRequestBookingDetails(requestId);
+
+    return Responses.handleSuccess(201, 'created', res, { request, bookingDetails });
   }
 
   /**
@@ -155,7 +157,9 @@ class Trip {
       userId: lineManager,
     });
     NotificationUtil.echoNotification(req, notification, 'new_request', lineManager);
-    return Responses.handleSuccess(201, 'created', res, request);
+    const bookingDetails = await bookingService.getRequestBookingDetails(requestId);
+
+    return Responses.handleSuccess(201, 'created', res, { request, bookingDetails });
   }
 
   /**

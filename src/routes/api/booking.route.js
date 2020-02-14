@@ -80,4 +80,112 @@ router.get(
   catchErrors(bookings.getBooking)
 );
 
+/**
+ * @swagger
+ *
+ * /booking:
+ *   post:
+ *     summary: Update booking information
+ *     description: Allows user to update booking payment information on creating trip request
+ *     tags:
+ *       - Booking
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               isPaid:
+ *                 type: boolean
+ *               paymentType:
+ *                 type: string
+  *     produces:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *               message:
+ *                 type: string
+ *               data:
+ *                 type: object
+ *                 properties:
+ *                   bookingId:
+ *                     type: integer
+ *                   roomId:
+ *                     type: integer
+ *                   arrivalDate:
+ *                     type: string
+ *                   leavingDate:
+ *                     type: string
+ *                   amount:
+ *                     type: string
+ *     responses:
+ *       201:
+ *         description: Booking updated
+ *       401:
+ *         description: unauthorized
+ */
+router.patch(
+  '/booking/request/:requestId',
+  verifyUser,
+  validation,
+  catchErrors(bookings.updateTripBooking)
+);
+
+/**
+ * @swagger
+ *
+ * /booking:
+ *   post:
+ *     summary: Update booking information
+ *     description: Allows user to update booking payment information on booking accomodation
+ *     tags:
+ *       - Booking
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               isPaid:
+ *                 type: boolean
+ *               paymentType:
+ *                 type: string
+  *     produces:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *               message:
+ *                 type: string
+ *               data:
+ *                 type: object
+ *                 properties:
+ *                   bookingId:
+ *                     type: integer
+ *                   roomId:
+ *                     type: integer
+ *                   arrivalDate:
+ *                     type: string
+ *                   leavingDate:
+ *                     type: string
+ *                   amount:
+ *                     type: string
+ *     responses:
+ *       201:
+ *         description: Booking updated
+ *       401:
+ *         description: unauthorized
+ */
+router.patch(
+  '/booking/payment',
+  verifyUser,
+  validation,
+  catchErrors(bookings.updateDirectBookings)
+);
+
 export default router;

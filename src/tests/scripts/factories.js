@@ -44,6 +44,11 @@ const tripsfactory = async (data) => {
   return trip;
 };
 
+const bookingfactory = async (data) => {
+  const booking = await db.booking.create(data);
+  return booking;
+};
+
 export {
   userfactory,
   hotelfactory,
@@ -53,5 +58,6 @@ export {
   locationfactory,
   messageFactory,
   likesfactory,
-  tripsfactory
+  tripsfactory,
+  bookingfactory
 };

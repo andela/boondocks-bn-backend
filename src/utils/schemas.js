@@ -246,6 +246,45 @@ const updateRatingSchema = Joi.object()
     }
   });
 
+const updateTripBookingSchema = Joi.object().keys({
+  paymentType: Joi.string().strict().trim().required().valid(
+    'paypal',
+    'stripe',
+    'cash',
+    'unpaid',
+  ),
+  description: Joi.string().trim().allow(null, '').when('paymentType', { is: 'stripe', then: Joi.required() }),
+  source: Joi.string().trim().allow(null, '').when('paymentType', { is: 'stripe', then: Joi.required() }),
+  currency: Joi.string().trim().allow(null, '').when('paymentType', { is: 'stripe', then: Joi.required() }),
+  amount: Joi.number().allow(null, '').when('paymentType', { is: 'stripe', then: Joi.required() }),
+  isPaid: Joi.bool().required(),
+}).options({
+  abortEarly: false,
+  language: {
+    key: '{{key}} '
+  }
+});
+
+const updateDirectBookingSchema = Joi.object().keys({
+  paymentType: Joi.string().strict().trim().required().valid(
+    'paypal',
+    'stripe',
+    'cash',
+    'unpaid',
+  ),
+  description: Joi.string().trim().allow(null, '').when('paymentType', { is: 'stripe', then: Joi.required() }),
+  source: Joi.string().trim().allow(null, '').when('paymentType', { is: 'stripe', then: Joi.required() }),
+  currency: Joi.string().trim().allow(null, '').when('paymentType', { is: 'stripe', then: Joi.required() }),
+  amount: Joi.number().allow(null, '').when('paymentType', { is: 'stripe', then: Joi.required() }),
+  isPaid: Joi.bool().required(),
+  bookingIds: Joi.array().items(Joi.number().error(() => 'bookingIds must all be an integers')).required()
+}).options({
+  abortEarly: false,
+  language: {
+    key: '{{key}} '
+  }
+});
+
 export default {
   '/auth/resetPassword': resetPassword,
   '/auth/signup': signupSchema,
@@ -263,5 +302,7 @@ export default {
   '/trips/stats': tripsStatsSchema,
   '/hotels/:hotelId/feedback': feedbackSchema,
   '/hotels/:hotelId/rating': rateSchema,
-  '/rating/:ratingId': updateRatingSchema
+  '/rating/:ratingId': updateRatingSchema,
+  '/booking/request/:requestId': updateTripBookingSchema,
+  '/booking/payment': updateDirectBookingSchema
 };

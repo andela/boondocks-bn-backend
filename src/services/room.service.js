@@ -31,10 +31,13 @@ class RoomService {
     const updatedRoom = await db.room.update({ status }, {
       where: {
         id: roomId
-      }
+      },
+      returning: true,
+      raw: true,
+      nest: true
     });
 
-    return updatedRoom;
+    return [updatedRoom[1][0].id];
   }
 }
 

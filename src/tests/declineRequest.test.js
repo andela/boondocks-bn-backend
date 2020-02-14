@@ -51,7 +51,7 @@ describe('PATCH /Request/:ID declined', () => {
       .set('Authorization', `Bearer ${userToken}`)
       .send(tripsData.trips[0])
       .end((err, res) => {
-        requestId = res.body.data.id;
+        requestId = res.body.data.request.id;
         res.status.should.be.eql(201);
         done(err);
       });

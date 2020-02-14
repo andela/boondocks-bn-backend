@@ -65,6 +65,10 @@ const getOneRequest = async (requestId) => {
           }
         ]
       },
+      {
+        model: db.booking,
+        attributes: ['amount', 'paymentType']
+      },
       { model: db.location,
         as: 'going',
         attributes: ['country', 'city', 'id']
@@ -89,7 +93,6 @@ const getOneRequest = async (requestId) => {
     }
     ]
   });
-
   return request;
 };
 

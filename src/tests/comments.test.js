@@ -68,7 +68,7 @@ describe('Travel request comments', () => {
       .set('Authorization', `Bearer ${rightUserToken}`)
       .send(tripsData.trips[0])
       .end((err, res) => {
-        requestId = res.body.data.id;
+        requestId = res.body.data.request.id;
         done(err);
       });
   });

@@ -56,7 +56,7 @@ const prepareForTest = async () => {
     .set('Authorization', tripOwnerTokenExport)
     .send(trips3);
 
-  const existingTripExport = res.body.data;
+  const existingTripExport = res.body.data.request;
   const trips2 = { ...updateTripsData.trips[2],
     requestId: existingTripExport.id,
     userId: existingTripExport.userId

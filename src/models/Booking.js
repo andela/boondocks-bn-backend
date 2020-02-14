@@ -6,6 +6,23 @@ module.exports = (sequelize, DataTypes) => {
     tripId: DataTypes.INTEGER,
     arrivalDate: DataTypes.DATE,
     leavingDate: DataTypes.DATE,
+    isPaid: DataTypes.BOOLEAN,
+    amount: {
+      type: DataTypes.DECIMAL(10, 2),
+      defaultValue: 0.00,
+      allowNull: false
+    },
+    paymentType: {
+      type: DataTypes.ENUM,
+      allowNull: false,
+      defaultValue: 'unpaid',
+      values: [
+        'paypal',
+        'stripe',
+        'cash',
+        'unpaid'
+      ]
+    },
   }, {});
   Booking.associate = (models) => {
     Booking.belongsTo(models.user, {
