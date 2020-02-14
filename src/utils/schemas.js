@@ -1,6 +1,8 @@
 /* eslint-disable newline-per-chained-call */
 import Joi from '@hapi/joi';
 
+export const schemaErrorMessage = message => () => message;
+
 const signupSchema = Joi.object().keys({
   firstName: Joi.string().strict().trim().required(),
   lastName: Joi.string().strict().trim().required(),
@@ -37,7 +39,7 @@ const oneWaySchema = Joi.object().keys({
   goingTo: Joi.number().strict().required(),
   travelDate: Joi.date().required(),
   reason: Joi.string().strict().required(),
-  rooms: Joi.array().items(Joi.number().error(() => 'rooms must be an integer value'))
+  rooms: Joi.array().items(Joi.number().error(schemaErrorMessage('rooms must be an integer value')))
 }).options({
   abortEarly: false,
   language: {
@@ -90,7 +92,7 @@ const twoWaySchema = Joi.object().keys({
   travelDate: Joi.date().required(),
   returnDate: Joi.date().greater(Joi.ref('travelDate')).required(),
   reason: Joi.string().strict().required(),
-  rooms: Joi.array().items(Joi.number().error(() => 'rooms must be an integer value')),
+  rooms: Joi.array().items(Joi.number().error(schemaErrorMessage('rooms must be an integer value'))),
 }).options({
   abortEarly: false,
   language: {
@@ -128,7 +130,7 @@ const updateTripSchema = Joi.object().keys({
       then: Joi.required(),
     }).allow(null, ''),
   rooms: Joi.array()
-    .items(Joi.number().error(() => 'rooms must be an integer value')),
+    .items(Joi.number().error(schemaErrorMessage('rooms must be an integer value'))),
   reason: Joi.string().strict(),
 }).options({
   abortEarly: false,
@@ -246,15 +248,31 @@ const rateSchema = Joi.object()
 
 const updateRatingSchema = Joi.object()
   .keys({
-    rating: Joi.number().integer().min(1).max(5)
+    rating: Joi.number()
+      .integer()
+      .min(1)
+      .max(5)
       .strict()
+      .required(),
+  })
+  .options({
+    abortEarly: false,
+    language: {
+      key: '{{key}} ',
+    },
+  });
+
+const verify2FASchema = Joi.object()
+  .keys({
+    token: Joi.string()
+      .regex(/^[0-9]{6}$/).error(schemaErrorMessage('Invalid token - 6 numeric characters are required'))
       .required()
   })
   .options({
     abortEarly: false,
     language: {
-      key: '{{key}} '
-    }
+      key: '{{key}} ',
+    },
   });
 
 const updateTripBookingSchema = Joi.object().keys({
@@ -317,4 +335,5 @@ export default {
   '/booking/request/:requestId': updateTripBookingSchema,
   '/booking/payment': updateDirectBookingSchema,
   '/users/documents': documentSchema,
+  '/2fa/totp/verify': verify2FASchema,
 };

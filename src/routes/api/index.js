@@ -11,6 +11,7 @@ import commentsRouter from './comments.route';
 import hotelsRouter from './hotels.route';
 import notificationRouter from './notifications.route';
 import bookingRouter from './booking.route';
+import twoFARouter from './2fa.routes';
 
 const specs = swaggerJsdoc(swaggerDefinition);
 const router = express.Router();
@@ -26,6 +27,7 @@ router.use(apiDocs, specsConfig);
 router.use(prefix, usersRouter);
 router.use(prefix, rolesRouter);
 router.use(prefix, authRouter);
+router.use(prefix, twoFARouter);
 router.use(prefix, tripsRouter);
 router.use(prefix, requestRouter);
 router.use(prefix, commentsRouter);

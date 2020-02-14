@@ -53,7 +53,13 @@ const verifyUser = async (req, res, next) => {
     verified: user.isVerified,
     role: user.role,
     receiveNotification: user.receiveNotification,
-    lineManager: user.lineManagerId
+    lineManager: user.lineManagerId,
+    twoFA: {
+      type: user.twoFAType,
+      secret: user.twoFASecret,
+      dataURL: user.twoFADataURL,
+      phoneNumber: user.phoneNumber,
+    },
   };
   next();
 };

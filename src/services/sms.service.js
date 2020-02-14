@@ -6,6 +6,7 @@ const authToken = config.twilioConfig.TWILIO_AUTH_TOKEN;
 const senderNo = config.twilioConfig.TWILIO_PHONENUMBER;
 const client = require('twilio')(accountSid, authToken);
 
+export const message = msg => logger.info(msg.sid);
 
 const messenger = async (to, body) => {
   if (config.env === 'production') {
@@ -15,7 +16,7 @@ const messenger = async (to, body) => {
         from: senderNo,
         to,
       })
-      .then(message => logger.info(message.sid));
+      .then(message);
   }
 };
 

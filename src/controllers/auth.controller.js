@@ -8,7 +8,9 @@ import JWTToken from '../utils/jwt';
 export const getTokenAfterSignIn = async (res, user) => {
   const userDetails = user.dataValues;
   const token = await JWTToken.signToken(userDetails);
-  return res.redirect(`${process.env.FRONTEND_URL}/profile?token=${token}`);
+  const { twoFASecret, twoFAType, twoFADataURL } = userDetails;
+  return res.redirect(
+    `${process.env.FRONTEND_URL}/profile?token=${token}&twoFASecret=${twoFASecret}&twoFAType=${twoFAType}&twoFADataURL=${twoFADataURL}`);
 };
 
 /** Auth Class */
