@@ -40,10 +40,11 @@ class Hotel {
     if (req.file !== undefined) {
       const {
         filename,
-        path
+        path,
+        mimetype,
       } = req.file;
 
-      image = await filesService.s3Upload(path, filename, 'hotels');
+      image = await filesService.s3Upload({ path, filename, mimetype }, 'hotels');
     }
 
     const hotel = await hotelService.create({
@@ -88,10 +89,11 @@ class Hotel {
     if (req.file !== undefined) {
       const {
         filename,
-        path
+        path,
+        mimetype,
       } = req.file;
 
-      image = await filesService.s3Upload(path, filename, 'rooms');
+      image = await filesService.s3Upload({ path, filename, mimetype }, 'rooms');
     }
     const status = 'available';
 

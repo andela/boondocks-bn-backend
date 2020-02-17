@@ -14,9 +14,9 @@ describe('Unit tests file service', () => {
     done();
   });
 
-  it('Should upload an image when the image is not available', (done) => {
+  it('Should not upload an image when the image is not available', (done) => {
     const form = new FormData();
-    const parser = fileService.upload('small0');
+    const parser = fileService.upload('small0', 'images', 5);
 
     form.append('name', 'Multer');
     form.append('small0', file('small0.dat'));
@@ -29,7 +29,7 @@ describe('Unit tests file service', () => {
 
   it('Should upload an image when the image is available', (done) => {
     const form = new FormData();
-    const parser = fileService.upload('image');
+    const parser = fileService.upload('image', 'images', 5);
 
     form.append('name', 'Multer');
     form.append('image', file(resolve(__dirname, '../../mock-data/images/search.png')));
