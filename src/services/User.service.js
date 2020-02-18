@@ -42,7 +42,8 @@ class UserServices {
           'lastLogin',
           'role',
           'phoneNumber',
-          'remember'
+          'remember',
+          'profilePicture'
         ],
         include: ['LineManager'],
       },
@@ -60,7 +61,7 @@ class UserServices {
   async updateUserInfoByEmail(attributes, email$) {
     const {
       firstName, lastName, email, birthDate, preferredLanguage, preferredCurrency, residenceAddress,
-      gender, department, lineManagerId, phoneNumber, remember,
+      gender, department, lineManagerId, phoneNumber, remember, profilePicture
     } = attributes;
 
 
@@ -82,21 +83,27 @@ class UserServices {
     } else if (!isLineManagerValid) {
       result = 'invalid_manager';
     } else {
+      const updateObj = {
+        firstName,
+        lastName,
+        birthDate,
+        preferredLanguage,
+        preferredCurrency,
+        gender,
+        email,
+        residenceAddress,
+        lineManagerId,
+        department,
+        phoneNumber,
+        remember
+      };
+
+      if (profilePicture !== '') {
+        updateObj.profilePicture = profilePicture;
+      }
+
       const userDetails = await db.user.update(
-        {
-          firstName,
-          lastName,
-          birthDate,
-          preferredLanguage,
-          preferredCurrency,
-          gender,
-          email,
-          residenceAddress,
-          lineManagerId,
-          department,
-          phoneNumber,
-          remember,
-        },
+        updateObj,
         {
           where: { email: email$ },
           returning: true,

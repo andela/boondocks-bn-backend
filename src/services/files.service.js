@@ -11,9 +11,11 @@ import ErrorHandler from '../utils/error';
 class fileService {
   /**
   * @param {String} field
+  * @param {Array} accept
+  * @param {String} uploadErrorMessage
   * @returns {object} file
   */
-  upload(field) {
+  upload(field, accept, uploadErrorMessage) {
     const dir = 'public/images';
 
     if (!fs.existsSync(dir)) {
@@ -28,9 +30,20 @@ class fileService {
       },
       onError: (err, next) => next(err)
     });
+
+    const fileFilter = (req, file, cb) => {
+      if (accept.includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(null, false);
+        return cb(new Error(uploadErrorMessage));
+      }
+    };
+
     return multer({
       limits: { fieldSize: 5 * 1024 * 1024 },
-      storage
+      storage,
+      fileFilter
     }).single(field);
   }
 
@@ -65,7 +78,14 @@ class fileService {
       Body: fs.createReadStream(path),
       Key: `${s3Folder}/${filename}`
     };
-    const data = await s3.upload(params).promise();
+
+    let data = null;
+
+    try {
+      data = await s3.upload(params).promise();
+    } catch (error) {
+      throw new ErrorHandler('Upload failed', 500);
+    }
 
     if (data) {
       fs.unlinkSync(path);

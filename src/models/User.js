@@ -86,7 +86,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
       allowNull: false
-    }
+    },
+    profilePicture: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
   }, {});
   User.associate = (models) => {
     User.hasMany(models.booking, {
