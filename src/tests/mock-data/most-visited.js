@@ -8,6 +8,7 @@ export default {
       lastName: 'case',
       email: 'testcase@email.co',
       password: Hash.generateSync('fghtttfht55'),
+      phoneNumber: '+250789390266',
       role: 'manager',
     },
     {

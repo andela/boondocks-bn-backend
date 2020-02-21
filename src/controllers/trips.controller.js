@@ -8,6 +8,7 @@ import {
 import tripService from '../services/Trip.service';
 import db from '../models';
 import Mailer from '../services/Mailer.services';
+import messenger from '../services/sms.service';
 import JWTHelper from '../utils/jwt';
 import NotificationService from '../services/notification.service';
 import NotificationUtil from '../utils/notification.util';
@@ -26,6 +27,11 @@ class Trip {
   async createTrip(req, res) {
     const host = `${req.protocol}://${req.get('host')}`;
     const currentUser = res.locals.user;
+
+    if (!currentUser.lineManager) {
+      return Responses.handleSuccess(400, 'Please update your profile to get a line manager', res);
+    }
+
     const {
       hotelId,
       leavingFrom,
@@ -63,7 +69,11 @@ class Trip {
       });
       await mail.newTravelNotification();
     }
-    const { firstName, email } = await UserService.getUserById(currentUser.lineManager);
+    const {
+      firstName,
+      email,
+      phoneNumber
+    } = await UserService.getUserById(currentUser.lineManager);
     const mail = new Mailer({
       name: firstName,
       username: currentUser.name,
@@ -72,6 +82,8 @@ class Trip {
       token
     });
     await mail.lineManagerNotification();
+
+    await messenger(phoneNumber, `New request initiated by ${currentUser.name}. Kindly review`);
 
     const { lineManager } = currentUser;
 
@@ -96,6 +108,10 @@ class Trip {
     const host = `${req.protocol}://${req.get('host')}`;
     const trips = req.body;
     const currentUser = res.locals.user;
+
+    if (!currentUser.lineManager) {
+      return Responses.handleSuccess(400, 'Please update your profile to get a line manager', res);
+    }
 
     const requestId = await createRequest(currentUser.userId, 'multi');
 
@@ -137,7 +153,11 @@ class Trip {
       await mail.newTravelNotification();
     }
 
-    const { firstName, email } = await UserService.getUserById(currentUser.lineManager);
+    const {
+      firstName,
+      email,
+      phoneNumber
+    } = await UserService.getUserById(currentUser.lineManager);
     const mail = new Mailer({
       name: firstName,
       username: currentUser.name,
@@ -146,6 +166,9 @@ class Trip {
       token
     });
     await mail.lineManagerNotification();
+
+    await messenger(phoneNumber, `New request initiated by ${currentUser.name}. Kindly review`);
+
 
     const { lineManager } = currentUser;
     const notification = await NotificationService.createNotification({

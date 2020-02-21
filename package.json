@@ -54,6 +54,7 @@
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
     "nodemon": "^1.19.4",
+    "on-finished": "^2.3.0",
     "passport": "^0.4.0",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
@@ -68,9 +69,9 @@
     "supertest": "^4.0.2",
     "swagger-jsdoc": "^3.4.0",
     "swagger-ui-express": "^4.1.2",
+    "twilio": "^3.39.4",
     "underscore": "^1.9.1",
-    "winston": "^3.2.1",
-    "on-finished": "^2.3.0"
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "form-data": "^3.0.0",

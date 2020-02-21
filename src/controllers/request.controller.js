@@ -7,8 +7,10 @@ import {
   getSearchedRequests,
   updateRequestStatus,
 } from '../services/request.service';
+import messenger from '../services/sms.service';
 import NotificationService from '../services/notification.service';
 import NotificationUtil from '../utils/notification.util';
+import UserService from '../services/User.service';
 
 /**
  * Class requests
@@ -68,6 +70,12 @@ class Requests {
     await updateRequestStatus(id, status);
 
     const request = await getOneRequest(id);
+
+    const {
+      phoneNumber
+    } = await UserService.getUserById(request.userId);
+    await messenger(phoneNumber, `Your trip request has been ${status} by your line-manager`);
+
     const notification = await NotificationService.createNotification({
       requestId: request.id,
       messages: `Your request has been ${status}`,

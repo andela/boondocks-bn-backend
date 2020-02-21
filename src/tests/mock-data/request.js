@@ -9,6 +9,7 @@ const request = {
       email: 'testcase@email.co',
       password: Hash.generateSync('fghtttfht55'),
       role: 'manager',
+      phoneNumber: '+250789390266',
       isVerified: true,
     },
     {
