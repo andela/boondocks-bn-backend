@@ -6,6 +6,7 @@ import JWTHelper from '../utils/jwt';
 import db from '../models';
 import UserServices from '../services/User.service';
 import Mailer from '../services/Mailer.services';
+import filesService from '../services/files.service';
 
 /**
  * Class for users related operations
@@ -179,7 +180,19 @@ class UserController {
     const userData = { ...req.body };
     const { user } = res.locals;
 
-    const data = await UserServices.updateUserInfoByEmail({ ...userData }, user.email);
+    let profilePicture = '';
+    if (req.file !== undefined) {
+      const {
+        filename,
+        path
+      } = req.file;
+
+      profilePicture = await filesService.s3Upload(path, filename, 'profile_pics');
+    }
+
+    const data = await UserServices.updateUserInfoByEmail({
+      ...userData, profilePicture
+    }, user.email);
 
     if (data === 'own_manage') {
       return Responses.handleError(409, 'You cannot manage your self', res);

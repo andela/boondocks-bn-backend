@@ -4,6 +4,7 @@ import checkForEmail from '../../validation/user.validation';
 import { validation } from '../../validation/validation';
 import catchErrors from '../../utils/helper';
 import { decodeQueryToken, verifyUser } from '../../middlewares/checkToken';
+import fileService from '../../services/files.service';
 
 const {
   updateUserInfo,
@@ -346,6 +347,10 @@ router.patch(
 router.patch(
   '/user/update-profile',
   verifyUser,
+  fileService.upload('profilePicture',
+    ['image/png', 'image/jpg', 'image/jpeg'],
+    'Only .png, .jpg and .jpeg format allowed!'
+  ),
   validation,
   catchErrors(updateUserInfo)
 );
