@@ -57,7 +57,7 @@ describe('Most travel destinations', () => {
         .end(async (err, res) => {
           await db.request.update(
             { status: 'approved' },
-            { where: { id: res.body.data.id } },
+            { where: { id: res.body.data.request.id } },
           );
           done();
         });

@@ -26,6 +26,7 @@ const config = {
     S3_BUCKET_NAME: process.env.S3_BUCKET_NAME
   },
   HASH_SALT_ROUNDS: 10,
+  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
   debug: false,
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   FRONTEND_URL: process.env.FRONTEND_URL,

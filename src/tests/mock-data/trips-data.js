@@ -86,6 +86,24 @@ export default {
     hotelId: 1,
     type: 'return',
     rooms: ['play']
+  }, {
+    leavingFrom: 1,
+    goingTo: 2,
+    travelDate: '2019-11-18',
+    reason: 'visit our agents',
+    hotelId: 1,
+    type: 'one way',
+    rooms: [7]
+  },
+  {
+    leavingFrom: 1,
+    goingTo: 2,
+    travelDate: '2019-11-18',
+    returnDate: '2019-11-20',
+    reason: 'visit our agents',
+    hotelId: 1,
+    type: 'return',
+    rooms: [8]
   }],
   multiCityTrips: [{
     leavingFrom: 1,
@@ -144,7 +162,7 @@ export default {
     id: 5,
     hotelId: 1,
     name: 'Muhabura',
-    type: 'return',
+    type: 'VIP',
     description: 'The best room ever',
     image: 'room.png',
     cost: 5000,
@@ -152,8 +170,29 @@ export default {
   },
   {
     id: 6,
+    hotelId: 1,
     name: 'Muhabura',
-    type: 'return',
+    type: 'VIP',
+    description: 'The best room ever',
+    image: 'room.png',
+    cost: 5000,
+    status: 'available'
+  },
+  {
+    id: 7,
+    hotelId: 1,
+    name: 'Muhabura',
+    type: 'VIP',
+    description: 'The best room ever',
+    image: 'room.png',
+    cost: 5000,
+    status: 'available'
+  },
+  {
+    id: 8,
+    hotelId: 1,
+    name: 'Muhabura',
+    type: 'VIP',
     description: 'The best room ever',
     image: 'room.png',
     cost: 5000,
@@ -209,6 +248,13 @@ export default {
       arrivalDate: new Date(),
       leavingDate,
       rooms: [2, 20]
+    },
+    {
+      userId: 1,
+      hotelId: 1,
+      arrivalDate: new Date(),
+      leavingDate,
+      rooms: [5]
     }
   ]
 };

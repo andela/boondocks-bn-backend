@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
     requestId: DataTypes.INTEGER
   }, {});
   Trip.associate = (models) => {
+    Trip.hasOne(models.booking, {
+      foreignKey: 'tripId',
+      onDelete: 'CASCADE'
+    });
     Trip.belongsTo(models.user, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'

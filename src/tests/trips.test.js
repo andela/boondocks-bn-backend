@@ -55,8 +55,9 @@ describe('/trips/{ oneway | return }', () => {
       .end((err, res) => {
         res.status.should.be.eql(201);
         const { data } = res.body;
-        data.should.be.an('object');
-        data.should.have.property('type').eql('single');
+        const requestResponse = data.request;
+        requestResponse.should.be.an('object');
+        requestResponse.should.have.property('type').eql('single');
         done();
       });
   });
@@ -69,8 +70,9 @@ describe('/trips/{ oneway | return }', () => {
       .end((err, res) => {
         res.status.should.be.eql(201);
         const { data } = res.body;
-        data.should.be.an('object');
-        data.should.have.property('type').eql('single');
+        const requestResponse = data.request;
+        requestResponse.should.be.an('object');
+        requestResponse.should.have.property('type').eql('single');
         done();
       });
   });
@@ -94,8 +96,9 @@ describe('/trips/{ oneway | return }', () => {
       .end((err, res) => {
         res.status.should.be.eql(201);
         const { data } = res.body;
-        data.should.be.an('object');
-        data.should.have.property('type').eql('multi');
+        const requestResponse = data.request;
+        requestResponse.should.be.an('object');
+        requestResponse.should.have.property('type').eql('multi');
         done();
       });
   });
@@ -133,8 +136,9 @@ describe('/trips/{ oneway | return }', () => {
       .end((err, res) => {
         res.status.should.be.eql(201);
         const { data } = res.body;
-        data.should.be.an('object');
-        data.should.have.property('type').eql('single');
+        const requestResponse = data.request;
+        requestResponse.should.be.an('object');
+        requestResponse.should.have.property('type').eql('single');
         done();
       });
   });

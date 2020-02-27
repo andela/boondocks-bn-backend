@@ -50,7 +50,7 @@ describe('/Requests', () => {
       .set('Authorization', `Bearer ${token}`)
       .send(tripsData.trips[0])
       .end((err, res) => {
-        requestid = res.body.data.id;
+        requestid = res.body.data.request.id;
         done(err);
       });
   });
