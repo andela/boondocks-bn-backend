@@ -138,6 +138,84 @@ class UserServices {
     const [rowsUpdate, [updatedUser]] = updateUser;
     return updatedUser;
   }
+
+  /**
+   * Save a document details in the database
+   *
+   * @param {Object} param
+   * @param {String} param.name document name
+   * @param {String} param.url document url,
+   * @param {String} param.userId document owner
+   * @returns {Object} document detauils
+   */
+  async addDocument({ name, url, userId }) {
+    return db.document.create({ userId, name, url });
+  }
+
+  /**
+   * Delete a document
+   * @param {Number} id
+   * @returns {Object} Deleted document
+   */
+  async deleteDocument(id) {
+    return db.document.destroy({
+      where: { id }
+    });
+  }
+
+  /**
+   * Retrieve documents
+   * @param {Number} userId
+   * @returns {Object} documents
+   */
+  async retrieveDocuments({ requesterId }) {
+    return db.document.findAll({
+      ...requesterId && { where: { userId: requesterId } },
+      order: [
+        ['id', 'DESC'],
+      ],
+      include: [
+        {
+          model: db.user,
+          as: 'admin',
+          attributes: ['id', 'firstName', 'lastName'],
+        },
+        {
+          model: db.user,
+          as: 'documentOwner',
+          attributes: ['id', 'firstName', 'lastName'],
+        }
+      ]
+    });
+  }
+
+  /**
+   * Retrieve one document
+   * @param {Integer} id
+   * @returns {Object} document
+   */
+  async getDocument(id) {
+    return db.document.findOne({
+      where: { id },
+      include: [{
+        model: db.user,
+        as: 'documentOwner',
+        attributes: ['id', 'firstName', 'lastName'],
+      }],
+    });
+  }
+
+  /**
+   * Verifies document
+   * @param {Integer} id
+   * @param {Integer} userId
+   * @returns {Object} document
+   */
+  async verifyDocument(id, userId) {
+    return db.document.update({ verified: true, travelAdminId: userId }, {
+      where: { id }
+    });
+  }
 }
 
 export default new UserServices();

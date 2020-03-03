@@ -151,6 +151,17 @@ const roomSchema = Joi.object().keys({
   allowUnknown: true
 });
 
+
+const documentSchema = Joi.object().keys({
+  name: Joi.string().required(),
+}).options({
+  abortEarly: false,
+  language: {
+    key: '{{key}} '
+  },
+  allowUnknown: false
+});
+
 const roleSchema = Joi.object().keys({
   email: Joi.string().strict().trim().email()
     .required(),
@@ -304,5 +315,6 @@ export default {
   '/hotels/:hotelId/rating': rateSchema,
   '/rating/:ratingId': updateRatingSchema,
   '/booking/request/:requestId': updateTripBookingSchema,
-  '/booking/payment': updateDirectBookingSchema
+  '/booking/payment': updateDirectBookingSchema,
+  '/users/documents': documentSchema,
 };

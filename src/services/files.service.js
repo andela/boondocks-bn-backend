@@ -11,19 +11,21 @@ import ErrorHandler from '../utils/error';
 class fileService {
   /**
   * @param {String} field
-  * @param {Array} accept
-  * @param {String} uploadErrorMessage
+  * @param {String} folderName
+  * @param {String} sizeLimit
+  * @param {Array} accept accepted file formats
+  * @param {String} uploadErrorMessage Error message
   * @returns {object} file
   */
-  upload(field, accept, uploadErrorMessage) {
-    const dir = 'public/images';
+  upload(field, folderName, sizeLimit, accept, uploadErrorMessage) {
+    const dir = `public/${folderName}`;
 
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
     }
     const storage = multer.diskStorage({
       destination: (req, file, cb) => {
-        cb(null, 'public/images');
+        cb(null, `public/${folderName}`);
       },
       filename: (req, file, cb) => {
         cb(null, `${Date.now()}-${file.originalname}`);
@@ -39,22 +41,23 @@ class fileService {
         return cb(new Error(uploadErrorMessage));
       }
     };
-
     return multer({
-      limits: { fieldSize: 5 * 1024 * 1024 },
+      limits: { fieldSize: sizeLimit * 1024 * 1024 },
       storage,
-      fileFilter
+      fileFilter,
     }).single(field);
   }
 
   /**
    * Upload a file to AWS S3 Storage
-   * @param {String} path path to file
-   * @param {String} filename file name
+   * @param {String} file path to file
+   * @param {String} file.path path to file
+   * @param {String} file.filename file name
+   * @param {String} file.mimetype file content type
    * @param {String} s3Folder S3 destination folder
    * @returns {String} S3 url
    */
-  async s3Upload(path, filename, s3Folder) {
+  async s3Upload({ path, filename, mimetype }, s3Folder) {
     aws.config.setPromisesDependency();
     const keysExist = s3Config.S3_ACCESS_KEY_ID
                           && s3Config.S3_SECRET_ACCESS_KEY
@@ -76,7 +79,8 @@ class fileService {
       ACL: 'public-read',
       Bucket: s3Config.S3_BUCKET_NAME,
       Body: fs.createReadStream(path),
-      Key: `${s3Folder}/${filename}`
+      Key: `${s3Folder}/${filename}`,
+      ContentType: mimetype,
     };
 
     let data = null;

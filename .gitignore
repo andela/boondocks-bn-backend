@@ -106,3 +106,6 @@ trash/
 .DS_Store
 src/migrations/.DS_Store
 public/images
+public/temp
+public/documents
+public/profile_pictures
