@@ -28,7 +28,7 @@ class UserController {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      password: passwordHash
+      password: passwordHash,
     };
     const user = await db.user.create(userData);
     const token = await JWTHelper.signToken(user);
@@ -54,7 +54,7 @@ class UserController {
    * @param {Object} req The request object
    * @param {Object} res The response object
    * @returns {Object} A user object with selected fields
-   * excluing the password
+   * excluding the password
    */
   async findUser(req, res) {
     const user = await UserService.findUserByEmail(req.body.email);
@@ -69,7 +69,10 @@ class UserController {
     const data = {
       firstName: user.firstName,
       lastName: user.lastName,
-      token
+      twoFASecret: user.twoFASecret,
+      twoFAType: user.twoFAType,
+      twoFADataURL: user.twoFADataURL,
+      token,
     };
     return Responses.handleSuccess(200, 'success', res, data);
   }
@@ -84,11 +87,12 @@ class UserController {
     const { user } = res.locals;
     await db.user.update(
       {
-        isVerified: true
+        isVerified: true,
       },
-      { where: { email: user.email } }
+      { where: { email: user.email } },
     );
-    return res.status(200).redirect(`${process.env.FRONTEND_URL}/login`);
+    return res.status(200)
+      .redirect(`${process.env.FRONTEND_URL}/login`);
   }
 
   /**
@@ -111,7 +115,8 @@ class UserController {
         host
       });
       await mail.sendVerificationEmail();
-      return res.status(200).redirect(`${process.env.FRONTEND_URL}/login`);
+      return res.status(200)
+        .redirect(`${process.env.FRONTEND_URL}/login`);
     }
     return Responses.handleError(
       404,

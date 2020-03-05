@@ -36,7 +36,7 @@ const server = app.listen(app.get('port'), () => {
 
 export const io = socketIo(server);
 
-// chat fuctionality
+// chat functionality
 chat(io);
 
 const connectedClients = {};

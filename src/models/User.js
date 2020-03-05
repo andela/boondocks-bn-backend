@@ -91,6 +91,26 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.STRING
     },
+    twoFAType: {
+      type: DataTypes.ENUM,
+      allowNull: false,
+      defaultValue: 'none',
+      values: [
+        'none',
+        'sms_text',
+        'authenticator_app',
+        'sms_text_temp',
+        'authenticator_app_temp',
+      ],
+    },
+    twoFASecret: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    twoFADataURL: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   }, {});
   User.associate = (models) => {
     User.hasMany(models.booking, {
