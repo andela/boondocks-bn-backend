@@ -1,0 +1,5 @@
+2020-01-18 15:46:55.750 CAT [56126] LOG:  starting PostgreSQL 12.1 on x86_64-apple-darwin19.2.0, compiled by Apple clang version 11.0.0 (clang-1100.0.33.16), 64-bit
+2020-01-18 15:46:55.750 CAT [56126] LOG:  listening on IPv6 address "::1", port 5432
+2020-01-18 15:46:55.750 CAT [56126] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2020-01-18 15:46:55.751 CAT [56126] FATAL:  could not open lock file "/tmp/.s.PGSQL.5432.lock": Permission denied
+2020-01-18 15:46:55.751 CAT [56126] LOG:  database system is shut down

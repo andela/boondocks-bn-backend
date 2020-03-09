@@ -11,6 +11,8 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+dist/
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
@@ -92,4 +94,18 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
+#Ide files
+.idea
+
 # End of https://www.gitignore.io/api/node
+
+# Test output with coveralls
+.nyc_output
+
+trash/
+.DS_Store
+src/migrations/.DS_Store
+public/images
+public/temp
+public/documents
+public/profile_pictures

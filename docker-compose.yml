@@ -1,0 +1,27 @@
+version: '3'
+services:
+  app:
+    container_name: boondocks-barefoot-nomad
+    restart: always
+    env_file: .env
+    environment:
+      - NODE_ENV=$NODE_ENV
+    build: .
+    ports:
+      - '9000:3000'
+    networks: 
+      - boondocks
+  postgres:
+    container_name: postgres
+    image: "postgres:9.4"
+    volumes:
+      - my_dbdata:/var/lib/postgresql/data
+    ports:
+      - "5000:5432"
+    networks: 
+      - boondocks
+volumes: 
+  my_dbdata:
+networks: 
+  boondocks:
+    driver: bridge

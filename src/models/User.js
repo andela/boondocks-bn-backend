@@ -1,57 +1,167 @@
-const mongoose = require("mongoose");
-const uniqueValidator = require("mongoose-unique-validator");
-const crypto = require("crypto");
-const secret = require("../config").secret;
-
-const UserSchema = new mongoose.Schema(
-    {
-        username: {
-            type: String,
-            lowercase: true,
-            unique: true,
-            required: [true, "can't be blank"],
-            match: [/^[a-zA-Z0-9]+$/, "is invalid"],
-            index: true
-        },
-        email: {
-            type: String,
-            lowercase: true,
-            unique: true,
-            required: [true, "can't be blank"],
-            match: [/\S+@\S+\.\S+/, "is invalid"],
-            index: true
-        },
-        bio: String,
-        image: String,
-        favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Article" }],
-        following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-        hash: String,
-        salt: String
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('user', {
+    firstName: {
+      allowNull: false,
+      type: DataTypes.STRING
     },
-    { timestamps: true }
-);
-
-UserSchema.plugin(uniqueValidator, { message: "is already taken." });
-
-UserSchema.methods.validPassword = function(password) {
-    const hash = crypto
-        .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
-        .toString("hex");
-    return this.hash === hash;
+    lastName: {
+      allowNull: false,
+      type: DataTypes.STRING,
+      unique: true
+    },
+    email: {
+      allowNull: false,
+      type: DataTypes.STRING,
+    },
+    isVerified: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    birthDate: {
+      allowNull: true,
+      type: DataTypes.DATE,
+    },
+    residenceAddress: {
+      allowNull: true,
+      type: DataTypes.STRING,
+    },
+    lineManagerId: {
+      allowNull: true,
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'users',
+        key: 'id',
+      },
+    },
+    preferredLanguage: {
+      allowNull: true,
+      type: DataTypes.STRING,
+    },
+    preferredCurrency: {
+      allowNull: true,
+      type: DataTypes.STRING,
+    },
+    department: {
+      allowNull: true,
+      type: DataTypes.STRING,
+    },
+    gender: {
+      allowNull: true,
+      type: DataTypes.STRING,
+    },
+    password: {
+      allowNull: true,
+      type: DataTypes.STRING,
+      defaultValue: 'password'
+    },
+    lastLogin: {
+      allowNull: true,
+      type: DataTypes.DATE,
+      defaultValue: sequelize.fn('NOW')
+    },
+    role: {
+      type: DataTypes.ENUM,
+      allowNull: false,
+      defaultValue: 'requester',
+      values: [
+        'super_administrator',
+        'travel_administrator',
+        'suppliers',
+        'travel_team_member',
+        'manager',
+        'requester'
+      ]
+    },
+    phoneNumber: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    receiveNotification: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+      allowNull: false
+    },
+    remember: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false
+    },
+    profilePicture: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    twoFAType: {
+      type: DataTypes.ENUM,
+      allowNull: false,
+      defaultValue: 'none',
+      values: [
+        'none',
+        'sms_text',
+        'authenticator_app',
+        'sms_text_temp',
+        'authenticator_app_temp',
+      ],
+    },
+    twoFASecret: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    twoFADataURL: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+  }, {});
+  User.associate = (models) => {
+    User.hasMany(models.booking, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
+    User.hasMany(models.hotel, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
+    User.hasMany(models.user, {
+      foreignKey: 'lineManagerId',
+      onDelete: 'CASCADE'
+    });
+    User.belongsTo(models.user, {
+      foreignKey: 'lineManagerId',
+      as: 'LineManager',
+    });
+    User.hasMany(models.request, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE',
+    });
+    User.hasMany(models.comment, {
+      foreignKey: 'userId',
+    });
+    User.hasMany(models.notification, {
+      foreignKey: 'userId',
+      targetKey: 'id',
+      onDelete: 'CASCADE',
+    });
+    User.hasMany(models.feedback, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE',
+    });
+    User.hasMany(models.conversation, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
+    User.hasMany(models.like, {
+      foreignKey: 'hotelId',
+      onDelete: 'CASCADE'
+    });
+    User.hasMany(models.document, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE',
+      as: 'documentowner',
+    });
+    User.hasMany(models.document, {
+      foreignKey: 'travelAdminId',
+      as: 'admin'
+    });
+  };
+  return User;
 };
-
-UserSchema.methods.setPassword = function(password) {
-    this.salt = crypto.randomBytes(16).toString("hex");
-    this.hash = crypto
-        .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
-        .toString("hex");
-};
-
-UserSchema.methods.toAuthJSON = function() {
-    return {
-        username: this.username,
-        email: this.email
-    };
-};
-
-mongoose.model("User", UserSchema);

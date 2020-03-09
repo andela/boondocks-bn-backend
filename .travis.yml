@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+  - "stable"
+install:
+  - npm ci
+cache:
+  directories:
+    - node_modules
+services:
+  - postgresql
+addons:
+  postgresql: "9.4"
+before_script:
+  - psql -c "CREATE DATABASE bn_test;" -U postgres
+  - npm run pretest-travis
+script:
+  - npm test
+after_success:
+  - npm run coverage
