@@ -38,7 +38,7 @@
     "@hapi/joi": "^15.0.3",
     "@sendgrid/mail": "^6.4.0",
     "aws-sdk": "^2.580.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "child-process-promise": "^2.2.1",
     "cors": "^2.8.4",
