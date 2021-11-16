@@ -37,7 +37,7 @@
   "dependencies": {
     "@hapi/joi": "^15.0.3",
     "@sendgrid/mail": "^6.4.0",
-    "aws-sdk": "^2.580.0",
+    "aws-sdk": "^2.814.0",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "child-process-promise": "^2.2.1",
